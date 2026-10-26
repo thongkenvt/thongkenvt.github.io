@@ -1,5 +1,5 @@
 <!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Báo cáo đánh giá BHYT & BHXH tự nguyện</title><script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script><style>
-:root{--blue:#164a76;--blue2:#23689e;--bg:#f2f6fa;--border:#d8e2ed;--txt:#1d2a39;--muted:#64748b;--good:#067647;--bad:#b42318}*{box-sizing:border-box}body{margin:0;font:14px/1.55 system-ui,-apple-system,"Segoe UI",Arial,sans-serif;background:var(--bg);color:var(--txt)}header{background:linear-gradient(115deg,#123d63,#2373a9);color:white;padding:28px max(18px,calc((100vw - 1200px)/2))}header h1{font-size:clamp(23px,3vw,31px);margin:0 0 7px}header p{margin:0;color:#e5f1fb}main{max-width:1200px;margin:24px auto;padding:0 16px}.card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:20px;margin:0 0 20px;box-shadow:0 3px 16px #123d6309}h2{color:var(--blue);margin:0 0 12px;font-size:21px}h3{color:var(--blue);margin:22px 0 8px;font-size:17px}.muted{color:var(--muted);font-size:13px}.uploadgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(225px,1fr));gap:12px}.upload{padding:12px;background:#fbfdff;border:1px solid var(--border);border-radius:10px}.upload label{font-weight:700;display:block;margin-bottom:8px}.upload input{width:100%;font-size:12px}.upload small{display:block;color:var(--muted);margin-top:7px}.actions,.tabs{display:flex;flex-wrap:wrap;gap:9px;margin:16px 0 0}button{border:0;border-radius:8px;background:var(--blue2);color:white;font:inherit;font-weight:700;padding:10px 15px;cursor:pointer}button.secondary,.tab{background:#e9f0f8;color:#184a75}.tab.active{background:var(--blue);color:white}.hint{padding:12px;background:#edf5ff;border:1px solid #c5dbf7;border-radius:9px;margin:12px 0;font-size:13px}.warning{padding:12px;background:#fffaeb;border:1px solid #fedf89;border-radius:9px;margin:12px 0;font-size:13px}.error{color:var(--bad)}.success{color:var(--good)}#message{margin:12px 0;font-weight:600;white-space:pre-line}.panel{display:none}.panel.active{display:block}.tablewrap{overflow:auto;border:1px solid var(--border);border-radius:9px;margin:9px 0 20px}table{width:100%;border-collapse:collapse;min-width:890px;font-size:13px}th,td{padding:9px 10px;border-bottom:1px solid #e7edf4;text-align:right;vertical-align:middle}th{background:#eaf2fa;color:#17436b;position:sticky;top:0;white-space:nowrap}td:nth-child(2),th:nth-child(2){text-align:left;min-width:170px}td:nth-child(3),th:nth-child(3){text-align:left}td:first-child,th:first-child{text-align:center}tfoot td{background:#f1f6fb;font-weight:800}.good{color:var(--good);font-weight:700}.bad{color:var(--bad);font-weight:700}.pill{padding:3px 9px;border-radius:12px;font-weight:800}.pill.good{background:#dcfae6}.pill.bad{background:#fee4e2}.summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:12px 0}.summary>div{border:1px solid var(--border);border-radius:10px;padding:13px}.summary b{font-size:23px;color:var(--blue);display:block}.summary span{font-size:12px;color:var(--muted)}select{padding:8px;border:1px solid var(--border);border-radius:7px;max-width:100%}.controls{display:flex;gap:12px;flex-wrap:wrap;align-items:center}.details{margin:8px 0}footer{text-align:center;color:var(--muted);padding:15px}@media(max-width:640px){header{padding:23px 16px}main{padding:0 9px}.card{padding:13px}.actions button{width:100%}}.org-report{border-top:2px solid var(--border);margin-top:24px;padding-top:12px}.org-report:first-child{border-top:0;margin-top:12px}.org-heading{font-size:19px;background:#eaf2fa;padding:12px 14px;border-radius:9px}.org-report h3:not(.org-heading){font-size:16px;margin-top:20px}
+:root{--blue:#164a76;--blue2:#23689e;--bg:#f2f6fa;--border:#d8e2ed;--txt:#1d2a39;--muted:#64748b;--good:#067647;--bad:#b42318}*{box-sizing:border-box}body{margin:0;font:14px/1.55 system-ui,-apple-system,"Segoe UI",Arial,sans-serif;background:var(--bg);color:var(--txt)}header{background:linear-gradient(115deg,#123d63,#2373a9);color:white;padding:28px max(18px,calc((100vw - 1200px)/2))}header h1{font-size:clamp(23px,3vw,31px);margin:0 0 7px}header p{margin:0;color:#e5f1fb}main{max-width:1200px;margin:24px auto;padding:0 16px}.card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:20px;margin:0 0 20px;box-shadow:0 3px 16px #123d6309}h2{color:var(--blue);margin:0 0 12px;font-size:21px}h3{color:var(--blue);margin:22px 0 8px;font-size:17px}.muted{color:var(--muted);font-size:13px}.uploadgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(225px,1fr));gap:12px}.upload{padding:12px;background:#fbfdff;border:1px solid var(--border);border-radius:10px}.upload label{font-weight:700;display:block;margin-bottom:8px}.upload input{width:100%;font-size:12px}.upload small{display:block;color:var(--muted);margin-top:7px}.actions,.tabs{display:flex;flex-wrap:wrap;gap:9px;margin:16px 0 0}button{border:0;border-radius:8px;background:var(--blue2);color:white;font:inherit;font-weight:700;padding:10px 15px;cursor:pointer}button.secondary,.tab{background:#e9f0f8;color:#184a75}.tab.active{background:var(--blue);color:white}.hint{padding:12px;background:#edf5ff;border:1px solid #c5dbf7;border-radius:9px;margin:12px 0;font-size:13px}.warning{padding:12px;background:#fffaeb;border:1px solid #fedf89;border-radius:9px;margin:12px 0;font-size:13px}.error{color:var(--bad)}.success{color:var(--good)}#message{margin:12px 0;font-weight:600;white-space:pre-line}.panel{display:none}.panel.active{display:block}.tablewrap{overflow:auto;border:1px solid var(--border);border-radius:9px;margin:9px 0 20px}table{width:100%;border-collapse:collapse;min-width:760px;font-size:12px}th,td{padding:7px 6px;border-bottom:1px solid #e7edf4;text-align:right;vertical-align:middle}th{background:#eaf2fa;color:#17436b;position:sticky;top:0;white-space:normal;line-height:1.3}td:nth-child(2),th:nth-child(2){text-align:left;min-width:170px}td:nth-child(3),th:nth-child(3){text-align:left}td:first-child,th:first-child{text-align:center}tfoot td{background:#f1f6fb;font-weight:800}.good{color:var(--good);font-weight:700}.bad{color:var(--bad);font-weight:700}.pill{padding:3px 9px;border-radius:12px;font-weight:800}.pill.good{background:#dcfae6}.pill.bad{background:#fee4e2}.summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:12px 0}.summary>div{border:1px solid var(--border);border-radius:10px;padding:13px}.summary b{font-size:23px;color:var(--blue);display:block}.summary span{font-size:12px;color:var(--muted)}select{padding:8px;border:1px solid var(--border);border-radius:7px;max-width:100%}.controls{display:flex;gap:12px;flex-wrap:wrap;align-items:center}.details{margin:8px 0}footer{text-align:center;color:var(--muted);padding:15px}@media(max-width:640px){header{padding:23px 16px}main{padding:0 9px}.card{padding:13px}.actions button{width:100%}}.org-report{border-top:2px solid var(--border);margin-top:24px;padding-top:12px}.org-report:first-child{border-top:0;margin-top:12px}.org-heading{font-size:19px;background:#eaf2fa;padding:12px 14px;border-radius:9px}.org-report h3:not(.org-heading){font-size:16px;margin-top:20px}
 .tablewrap{width:100%;max-width:100%;overflow-x:auto}table{min-width:0}th,td{padding:8px 7px;font-size:12px}th{white-space:normal;line-height:1.3}th:last-child,td:last-child{min-width:78px;max-width:120px;text-align:center}
 </style></head><body>
 <header><h1>BÁO CÁO ĐÁNH GIÁ BHYT & BHXH TỰ NGUYỆN</h1><p>Phần 1: Đánh giá tổng quan · Phần 2: Đánh giá chi tiết · Phần 3: Đánh giá tăng giảm</p></header><main>
@@ -46,7 +46,7 @@ function parsePlan(wb){
  const s2=rowsOf(wb,1), h2=headerSearch(s2,[['Họ và tên'],['Mã đơn vị'],['Kế hoạch']]);
  // Dòng 1 chứa tiêu đề nhóm, dòng 2 chứa tên chỉ tiêu; tọa độ theo file DS nhân viên thu mẫu.
  const hTop=h2.h.map(x=>String(x??'')),hSub=(s2[h2.r+1]||[]).map(x=>String(x??''));
- const employee=headerIndex(hTop,['Họ và tên']), org=headerIndex(hTop,['Tên tổ chức']), codeGroup=headerIndex(hTop,['Mã đơn vị']), planGroup=headerIndex(hTop,['Kế hoạch']);
+ const employee=headerIndex(hTop,['Họ và tên']), employeeIdCol=headerIndex(hTop,['Mã nhân viên thu']), org=headerIndex(hTop,['Tên tổ chức']), codeGroup=headerIndex(hTop,['Mã đơn vị']), planGroup=headerIndex(hTop,['Kế hoạch']);
  if(employee<0||org<0||codeGroup<0||planGroup<0)throw Error('Sheet2 thiếu các nhóm cột Họ và tên / Tên tổ chức / Mã đơn vị / Kế hoạch.');
  const tnCode=codeGroup, bhytCode=codeGroup+1,tnPlan=planGroup,bhytPlan=planGroup+1;
  const check=(idx,text)=>{if(idx>=Math.max(hTop.length,hSub.length)+1)throw Error('Sheet2 thiếu cột '+text)};[tnCode,bhytCode,tnPlan,bhytPlan].forEach((x,i)=>check(x,['mã BHXHTN','mã BHYT','kế hoạch BHXHTN','kế hoạch BHYT'][i]));
@@ -57,15 +57,33 @@ function parsePlan(wb){
   if(!name||!group)continue;
   const explicitTn=String(row[tnCode]??'').trim(),explicitBhyt=String(row[bhytCode]??'').trim();
   if(explicitTn)lastTn=explicitTn;if(explicitBhyt)lastBhyt=explicitBhyt;
-  employees.push({org:group,name,tnCode:lastTn,bhytCode:lastBhyt,tnPlan:num(row[tnPlan]),bhytPlan:num(row[bhytPlan]),row:i+1,explicitTn,explicitBhyt});
+  employees.push({org:group,name,employeeId:String(row[employeeIdCol]??'').trim().replace(/['’]/g,''),tnCode:lastTn,bhytCode:lastBhyt,tnPlan:num(row[tnPlan]),bhytPlan:num(row[bhytPlan]),row:i+1,explicitTn,explicitBhyt});
  }
- return {orgPlans,employees,planRows};
+ // Mã nhân viên thu là khóa định danh. Không gộp theo họ tên vì có người trùng tên.
+ const grouped=new Map();
+ for(const e of employees){
+  const key=e.org+'|'+(e.employeeId?norm(e.employeeId):'ROW'+e.row);
+  const existed=grouped.has(key);
+  if(!existed)grouped.set(key,{...e,tnCodes:new Set(),bhytCodes:new Set()});
+  const g=grouped.get(key);
+  if(e.tnCode)g.tnCodes.add(e.tnCode);
+  if(e.bhytCode)g.bhytCodes.add(e.bhytCode);
+  if(existed){g.tnPlan+=e.tnPlan;g.bhytPlan+=e.bhytPlan}
+ }
+ const uniqueEmployees=[...grouped.values()].map(e=>({...e,tnCodes:[...e.tnCodes],bhytCodes:[...e.bhytCodes]}));
+ return {orgPlans,employees:uniqueEmployees,planRows,originalCount:employees.length};
 }
 function sumOrg(data,org){return data.reduce((s,r)=>s+(orgOf(r.name)===org?r.value:0),0)}
 function codeMap(data){const m=new Map();for(const r of data){const key=norm(r.code);if(key)m.set(key,(m.get(key)||0)+r.value)}return m}
 // Chia nguyên theo thứ tự từ trên xuống: 11 cho 3 người => 4,4,3; số âm chia đối xứng.
 function distribute(total,count,index){if(!count)return 0;const sign=Math.sign(total),abs=Math.abs(Math.round(total)),base=Math.floor(abs/count),rem=abs%count;return sign*(base+(index<rem?1:0))}
-function makeDetail(employees,now,prev,kind){const key=kind==='bhyt'?'bhytCode':'tnCode',pk=kind==='bhyt'?'bhytPlan':'tnPlan',currentMap=codeMap(now),prevMap=codeMap(prev);const groups=new Map();employees.forEach((e,i)=>{const code=norm(e[key]);if(!code)return;const k=e.org+'|'+code;if(!groups.has(k))groups.set(k,[]);groups.get(k).push(i)});const rank=new Map();for(const [k,indices] of groups)indices.forEach((i,j)=>rank.set(i,{j,count:indices.length}));return employees.map((e,i)=>{const code=norm(e[key]),r=rank.get(i);return {org:e.org,name:e.name,code:e[key],plan:e[pk],current:r?distribute(currentMap.get(code)||0,r.count,r.j):0,prev:r?distribute(prevMap.get(code)||0,r.count,r.j):0,row:e.row,shared:r?.count||0}})}
+function makeDetail(employees,now,prev,kind){
+ const key=kind==='bhyt'?'bhytCodes':'tnCodes',pk=kind==='bhyt'?'bhytPlan':'tnPlan',currentMap=codeMap(now),prevMap=codeMap(prev);
+ const owners=new Map();employees.forEach((e,i)=>(e[key]||[]).forEach(raw=>{const c=norm(raw);if(!c)return;if(!owners.has(c))owners.set(c,[]);if(!owners.get(c).includes(i))owners.get(c).push(i)}));
+ const result=employees.map(e=>({org:e.org,name:e.name,employeeId:e.employeeId,code:(e[key]||[]).join(', '),plan:e[pk],current:0,prev:0,row:e.row}));
+ for(const [code,indices] of owners)indices.forEach((i,j)=>{result[i].current+=distribute(currentMap.get(code)||0,indices.length,j);result[i].prev+=distribute(prevMap.get(code)||0,indices.length,j)});
+ return result;
+}
 function table(head,body,foot){return `<div class="tablewrap"><table><thead><tr>${head.map(v=>`<th>${esc(v)}</th>`).join('')}</tr></thead><tbody>${body.map(row=>`<tr>${row.map(v=>`<td>${v}</td>`).join('')}</tr>`).join('')}</tbody>${foot?`<tfoot><tr>${foot.map(v=>`<td>${v}</td>`).join('')}</tr></tfoot>`:''}</table></div>`}
 function total(rows,key){return rows.reduce((s,r)=>s+(r[key]||0),0)}
 function overviewTable(title,rows){const head=['STT','Tên TCHTPTĐT','Số thực hiện','Số kế hoạch','Tỷ lệ % so với kế hoạch','Tăng/Giảm so với tháng trước'];const body=rows.map((r,i)=>[i+1,esc(r.org),fmt(r.current),fmt(r.plan),fmtPct(pct(r.current,r.plan)),delta(r.current-r.prev)]);const c=total(rows,'current'),p=total(rows,'plan'),pr=total(rows,'prev');return `<h3>${title}</h3>`+table(head,body,['','TỔNG CỘNG',fmt(c),fmt(p),fmtPct(pct(c,p)),delta(c-pr)])}
@@ -77,102 +95,91 @@ function parseChanges(wb,kind){
  const increases=new Set(kind==='bhyt'?['ON','TM']:['DL','DT','TM']);
  const decreases=new Set(kind==='bhyt'?['GH']:['GB','GC','GH']);
  const allowed=new Set([...increases,...decreases]);
- const result=[],diagnostics=[];
  const clean=v=>String(v??'').trim();
- const validCode=v=>/^[A-Z0-9]{5,45}$/i.test(clean(v))&&/\d/.test(clean(v));
- // Biểu mẫu thực tế: "Mã đơn vị/Điểm thu: 400047...T1    MS thuế: ...".
- // Phải chấp nhận "/Điểm thu" ở giữa nhãn và dấu hai chấm.
- function extractCode(cell){
-  const t=clean(cell);
-  const m=t.match(/mã\s*(?:đơn\s*vị|đv)(?:\s*\/\s*điểm\s*thu)?\s*[:：]\s*([A-Z0-9]{5,45})/i);
-  return m&&validCode(m[1])?m[1]:null;
- }
- const isCodeHeader=v=>/^(madvi|madv|madonvi|madonvidiemthu|madonvithu|madaily|madiemthu)$/.test(norm(v));
- const isNoteHeader=v=>/^(ghichu|matanggiam|mabiendong|noidungtanggiam|lydotanggiam|loaitanggiam)$/.test(norm(v));
+ const isCode=v=>/^[A-Z0-9]{5,45}$/i.test(clean(v))&&/\d/.test(clean(v));
+ const codeIn=v=>{const m=clean(v).match(/mã\s*(?:đơn\s*vị|đv)(?:\s*\/\s*điểm\s*thu)?\s*[:：]\s*([A-Z0-9]{5,45})/i);return m&&isCode(m[1])?m[1]:null};
+ const data=[],diagnostics=[];
  for(const sheetName of wb.SheetNames){
   const rows=XLSX.utils.sheet_to_json(wb.Sheets[sheetName],{header:1,defval:'',raw:false,blankrows:false});
-  let activeCode='',noteCol=-1,codeCol=-1,records=0,blocks=0;
-  const samples=[];
+  let code='',noteCol=-1,personCol=2,forms=0,accepted=0,skipped=0;
   for(const row of rows){
    const cells=(row||[]).map(clean);
-   const headCode=cells.map(extractCode).find(Boolean);
-   if(headCode){
-    activeCode=headCode;noteCol=-1;codeCol=-1;blocks++;
-    if(samples.length<4)samples.push(activeCode);
-    continue;
+   const found=cells.map(codeIn).find(Boolean);
+   if(found){code=found;noteCol=-1;personCol=2;forms++;continue}
+   for(let i=0;i<cells.length-1;i++)if(/^mã\s*(?:đơn\s*vị|đv)(?:\s*\/\s*điểm\s*thu)?\s*[:：]?\s*$/i.test(cells[i])&&isCode(cells[i+1])){code=cells[i+1];noteCol=-1;forms++}
+   const nh=cells.findIndex(v=>norm(v)==='ghichu');
+   if(nh>=0){noteCol=nh;const ph=cells.findIndex(v=>/^(sodinhdanh|masobhxh|masobh|masodinhdanh)$/.test(norm(v)));if(ph>=0)personCol=ph;continue}
+   if(!code||!/^\d+$/.test(cells[0]||'')||!cells[1]||!cells[personCol])continue;
+   let note=noteCol>=0?cells[noteCol].toUpperCase():'';
+   if(!allowed.has(note)){
+    const hits=cells.map((v,i)=>({v:v.toUpperCase(),i})).filter(x=>allowed.has(x.v));
+    if(hits.length!==1){skipped++;continue}
+    note=hits[0].v;if(noteCol<0)noteCol=hits[0].i;
    }
-   // Dự phòng nhãn và giá trị nằm ở hai ô liền nhau.
-   for(let j=0;j<cells.length-1;j++){
-    if(/^mã\s*(?:đơn\s*vị|đv)(?:\s*\/\s*điểm\s*thu)?\s*[:：]?\s*$/i.test(cells[j])&&validCode(cells[j+1])){
-     activeCode=cells[j+1];noteCol=-1;codeCol=-1;blocks++;
-     if(samples.length<4)samples.push(activeCode);
-    }
-   }
-   const nc=cells.findIndex(isNoteHeader);
-   if(nc>=0){noteCol=nc;continue}
-   const cc=cells.findIndex(isCodeHeader);
-   if(cc>=0){codeCol=cc;continue}
-   // Chỉ đếm dòng người tham gia: STT là số, cột B là họ tên,
-   // cột C có mã số/định danh. Loại dòng tổng hợp, tiêu đề và chú thích.
-   if(!/^\d+$/.test(cells[0]||'')||!(cells[1]||'')||!(cells[2]||''))continue;
-   const code=codeCol>=0&&validCode(cells[codeCol])?cells[codeCol]:activeCode;
-   if(!validCode(code))continue;
-   let token=noteCol>=0?(cells[noteCol]||'').toUpperCase():'';
-   if(!allowed.has(token)){
-    // Dò mã chính xác ở cột ghi chú nếu biểu mẫu bị thiếu tiêu đề.
-    const hits=cells.map((v,j)=>({v:v.toUpperCase(),j})).filter(x=>allowed.has(x.v));
-    if(hits.length!==1)continue;
-    token=hits[0].v;
-    if(noteCol<0)noteCol=hits[0].j;
-   }
-   records++;
-   result.push({code,inc:increases.has(token)?1:0,dec:decreases.has(token)?1:0});
+   const person=clean(cells[personCol]).replace(/\s+/g,'').toUpperCase();
+   data.push({code,person,note,inc:increases.has(note)?1:0,dec:decreases.has(note)?1:0});accepted++;
   }
-  diagnostics.push({sheet:sheetName,records,blocks,codeSamples:samples});
+  diagnostics.push({sheet:sheetName,forms,accepted,skipped});
  }
- if(!result.length){
-  const info=diagnostics.map(d=>`${d.sheet}: ${d.records} dòng; ${d.blocks} biểu mẫu; mã ví dụ ${d.codeSamples.join(', ')||'chưa thấy'}`).join(' | ');
-  throw Error((kind==='bhyt'?'D03ATS':'D05_TS')+' không nhận diện được phát sinh. '+info);
- }
- return {data:result,identified:result.length,unrecognized:0,sheet:diagnostics.map(d=>d.sheet).join(', '),diagnostics};
+ if(!data.length)throw Error((kind==='bhyt'?'D03ATS':'D05_TS')+' chưa nhận diện được dòng phát sinh: '+diagnostics.map(x=>x.sheet+' '+x.forms+' biểu mẫu').join('; '));
+ return {data,identified:data.length,diagnostics};
 }
 function changeCodeMap(parsed){
- const map=new Map();
- for(const row of parsed.data){const k=norm(row.code);if(!k)continue;let x=map.get(k);if(!x){x={inc:0,dec:0};map.set(k,x)}x.inc+=row.inc;x.dec+=row.dec;}
- let cancelled=0;
- for(const x of map.values())if(x.inc>0&&x.dec>0){cancelled++;x.inc=0;x.dec=0;}
- return {map,cancelled};
+ // Bù trừ THEO LƯỢT PHÁT SINH cho cùng một người trong cùng một mã đơn vị.
+ // Ví dụ 2 tăng + 1 giảm => 1 tăng, 0 giảm; 1 tăng + 2 giảm => 0 tăng, 1 giảm.
+ // Không bù trừ giữa những người khác nhau, kể cả cùng mã đơn vị.
+ const persons=new Map();
+ for(const r of parsed.data){
+  const code=norm(r.code),person=norm(r.person);
+  if(!code||!person)continue;
+  const key=code+'|'+person;
+  if(!persons.has(key))persons.set(key,{code,inc:0,dec:0});
+  const p=persons.get(key);
+  p.inc+=Number(r.inc)||0;
+  p.dec+=Number(r.dec)||0;
+ }
+ const map=new Map();let offsetPairs=0,affectedPersons=0;
+ for(const p of persons.values()){
+  if(!map.has(p.code))map.set(p.code,{inc:0,dec:0});
+  const paired=Math.min(p.inc,p.dec);
+  offsetPairs+=paired;
+  if(paired)affectedPersons++;
+  map.get(p.code).inc+=p.inc-paired;
+  map.get(p.code).dec+=p.dec-paired;
+ }
+ return {map,cancelled:offsetPairs,affectedPersons,duplicates:0};
 }
 function makeChanges(employees,parsed,kind){
- const field=kind==='bhyt'?'bhytCode':'tnCode',cm=changeCodeMap(parsed);
- const groups=new Map();
- employees.forEach((e,i)=>{const c=norm(e[field]);if(!c)return;const k=e.org+'|'+c;if(!groups.has(k))groups.set(k,[]);groups.get(k).push(i)});
- const result=employees.map(e=>({org:e.org,name:e.name,code:e[field],inc:0,dec:0,diff:0}));
- for(const [key,indices] of groups){const code=norm(employees[indices[0]][field]);const x=cm.map.get(code)||{inc:0,dec:0};indices.forEach((idx,j)=>{const r=result[idx];r.inc=distribute(x.inc,indices.length,j);r.dec=distribute(x.dec,indices.length,j);r.diff=r.inc-r.dec})}
- return {rows:result,cancelled:cm.cancelled,matched:[...cm.map.keys()].filter(c=>employees.some(e=>norm(e[field])===c)).length,source:parsed};
+ const field=kind==='bhyt'?'bhytCodes':'tnCodes',cm=changeCodeMap(parsed);
+ const owners=new Map();
+ employees.forEach((e,i)=>{for(const raw of e[field]||[]){const code=norm(raw);if(!code)continue;if(!owners.has(code))owners.set(code,[]);if(!owners.get(code).includes(i))owners.get(code).push(i)}});
+ const rows=employees.map(e=>({org:e.org,name:e.name,employeeId:e.employeeId,code:(e[field]||[]).join(', '),inc:0,dec:0,diff:0}));
+ for(const [code,indices] of owners){const x=cm.map.get(code)||{inc:0,dec:0};indices.forEach((i,j)=>{rows[i].inc+=distribute(x.inc,indices.length,j);rows[i].dec+=distribute(x.dec,indices.length,j)})}
+ rows.forEach(r=>r.diff=r.inc-r.dec);
+ return {rows,cancelled:cm.cancelled,duplicates:cm.duplicates,matched:[...cm.map.keys()].filter(c=>owners.has(c)).length,source:parsed};
 }
 function changeTable(title,rows){
- const head=['STT','Tên nhân viên','Tăng','Giảm','Chênh lệch'];
- const body=rows.map((r,i)=>[i+1,esc(r.name),fmt(r.inc),fmt(r.dec),delta(r.diff)]);
+ const head=['STT','Mã NV thu','Tên nhân viên','Tăng','Giảm','Chênh lệch'];
+ const body=rows.map((r,i)=>[i+1,esc(r.employeeId),esc(r.name),fmt(r.inc),fmt(r.dec),delta(r.diff)]);
  const inc=total(rows,'inc'),dec=total(rows,'dec');
- return `<h3>${title}</h3>`+table(head,body,['','TỔNG CỘNG',fmt(inc),fmt(dec),delta(inc-dec)]);
+ return `<h3>${title}</h3>`+table(head,body,['','','TỔNG CỘNG',fmt(inc),fmt(dec),delta(inc-dec)]);
 }
-function exportChangeRows(rows){return [['STT','Tên tổ chức','Tên nhân viên','Mã đơn vị','Tăng','Giảm','Chênh lệch'],...rows.map((r,i)=>[i+1,r.org,r.name,r.code,r.inc,r.dec,r.diff]),['','TỔNG CỘNG','','',total(rows,'inc'),total(rows,'dec'),total(rows,'diff')]]}
+function exportChangeRows(rows){return [['STT','Tên tổ chức','Mã NV thu','Tên nhân viên','Mã đơn vị','Tăng','Giảm','Chênh lệch'],...rows.map((r,i)=>[i+1,r.org,r.employeeId,r.name,r.code,r.inc,r.dec,r.diff]),['','TỔNG CỘNG','','','',total(rows,'inc'),total(rows,'dec'),total(rows,'diff')]]}
 
 let state=null;
 function render(){const {ob,ot,db,dt,warnings}=state;$('overview').innerHTML=`<div class="summary"><div><b>${fmt(total(ob,'current'))}</b><span>BHYT thực hiện</span></div><div><b>${fmt(total(ot,'current'))}</b><span>BHXH tự nguyện thực hiện</span></div><div><b>${fmt(total(ob,'current')-total(ob,'prev'))}</b><span>Chênh lệch BHYT</span></div><div><b>${fmt(total(ot,'current')-total(ot,'prev'))}</b><span>Chênh lệch BHXH tự nguyện</span></div></div>${overviewTable('1.1. Kết quả BHYT',ob)}${overviewTable('1.2. Kết quả BHXH tự nguyện',ot)}`;
  $('detailTables').innerHTML=ORGS.map((o,i)=>{const bhytRows=db.filter(x=>x.org===o.name),tnRows=dt.filter(x=>x.org===o.name);return `<section class="org-report"><h3 class="org-heading">${i+1}. ${esc(o.name)}</h3>${detailTable('a. BHXH tự nguyện',tnRows)}${detailTable('b. BHYT',bhytRows)}</section>`}).join('');
- $('changeTables').innerHTML=ORGS.map((o,i)=>{const tnRows=state.ct.rows.filter(x=>x.org===o.name),bhytRows=state.cb.rows.filter(x=>x.org===o.name);return `<section class="org-report"><h3 class="org-heading">${i+1}. ${esc(o.name)}</h3>${changeTable('a. BHXH tự nguyện',tnRows)}${changeTable('b. BHYT',bhytRows)}</section>`}).join('')+`<div class="hint">Quy tắc: nếu một mã đơn vị vừa có ghi chú tăng vừa có ghi chú giảm thì bỏ cả hai. D03ATS: ${state.cb.cancelled} mã bị loại; D05_TS: ${state.ct.cancelled} mã bị loại. Nếu mã có nhiều nhân viên, phân bổ theo thứ tự từ trên xuống.</div>`;
+ $('changeTables').innerHTML=ORGS.map((o,i)=>{const tnRows=state.ct.rows.filter(x=>x.org===o.name),bhytRows=state.cb.rows.filter(x=>x.org===o.name);return `<section class="org-report"><h3 class="org-heading">${i+1}. ${esc(o.name)}</h3>${changeTable('a. BHXH tự nguyện',tnRows)}${changeTable('b. BHYT',bhytRows)}</section>`}).join('')+`<div class="hint">Quy tắc: cùng một người trong cùng mã đơn vị được bù trừ theo từng lượt phát sinh (2 tăng, 1 giảm = 1 tăng, 0 giảm); không bù trừ giữa những người khác nhau. D03ATS: ${state.cb.cancelled} cặp tăng/giảm đã bù trừ; D05_TS: ${state.ct.cancelled} cặp tăng/giảm đã bù trừ. Nếu mã đơn vị thuộc nhiều mã NV thu, phân bổ theo thứ tự từ trên xuống; nếu một mã NV thu có nhiều mã đơn vị, cộng dồn trên một dòng.</div>`;
  if(warnings.length)$('overview').insertAdjacentHTML('beforeend',`<details class="warning"><summary><b>${warnings.length} lưu ý cần đối chiếu dữ liệu</b></summary><ul>${warnings.slice(0,100).map(w=>`<li>${esc(w)}</li>`).join('')}</ul></details>`);
 }
 function makeWarnings(plans,bn,tn){const warnings=[];for(const o of ORGS){if(!bn.some(x=>orgOf(x.name)===o.name))warnings.push('Không thấy tên tổ chức '+o.name+' trong file BHYT tháng này.');if(!tn.some(x=>orgOf(x.name)===o.name))warnings.push('Không thấy tên tổ chức '+o.name+' trong file BHXH tự nguyện tháng này.')}for(const e of plans.employees){if(!e.bhytCode)warnings.push(`Dòng ${e.row}: ${e.name} chưa có mã BHYT.`);if(!e.tnCode)warnings.push(`Dòng ${e.row}: ${e.name} chưa có mã BHXH tự nguyện.`)}return warnings}
 async function run(){if(typeof XLSX==='undefined'){$('message').className='error';$('message').textContent='Không tải được thư viện đọc Excel. Hãy kiểm tra kết nối Internet và tải lại trang.';return}const btn=$('run');btn.disabled=true;$('message').className='';$('message').textContent='Đang đọc và xử lý file...';try{const ids=['plan','bhyt','tn','bhytPrev','tnPrev','d03','d05'];const books=await Promise.all(ids.map(readFile));const p=parsePlan(books[0]);const bn=parseData(books[1],'bhyt'),tn=parseData(books[2],'tn'),bp=parseData(books[3],'bhyt'),tp=parseData(books[4],'tn');const ob=ORGS.map((o,i)=>({org:o.name,current:sumOrg(bn,o.name),prev:sumOrg(bp,o.name),plan:p.orgPlans[i].bhyt})),ot=ORGS.map((o,i)=>({org:o.name,current:sumOrg(tn,o.name),prev:sumOrg(tp,o.name),plan:p.orgPlans[i].tn}));const db=makeDetail(p.employees,bn,bp,'bhyt'),dt=makeDetail(p.employees,tn,tp,'tn');const pb=parseChanges(books[5],'bhyt'),pt=parseChanges(books[6],'tn');const cb=makeChanges(p.employees,pb,'bhyt'),ct=makeChanges(p.employees,pt,'tn');
- const warnings=makeWarnings(p,bn,tn);
+ const warnings=makeWarnings(p,bn,tn);if(p.originalCount>p.employees.length)warnings.push('Đã gộp '+(p.originalCount-p.employees.length)+' dòng trùng mã nhân viên thu, cộng dồn các mã đơn vị.');
  if(pb.identified===0)warnings.push('D03ATS không có dòng ghi chú ON, TM hoặc GH được nhận diện.');
  if(pt.identified===0)warnings.push('D05_TS không có dòng ghi chú DL, DT, TM, GB, GC hoặc GH được nhận diện.');
  if(cb.matched===0)warnings.push('D03ATS không có mã đơn vị nào khớp danh sách nhân viên thu.');
  if(ct.matched===0)warnings.push('D05_TS không có mã đơn vị nào khớp danh sách nhân viên thu.');
- state={ob,ot,db,dt,cb,ct,warnings};$('result').hidden=false;render();$('message').className='success';$('message').textContent=`Đã tổng hợp 4 tổ chức và ${p.employees.length} nhân viên. ${state.warnings.length?'Có '+state.warnings.length+' lưu ý cần đối chiếu.':'Không phát hiện thiếu mã ở danh sách nhân viên.'}`;$('result').scrollIntoView({behavior:'smooth',block:'start'})}catch(e){console.error(e);$('message').className='error';$('message').textContent='Không thể tạo báo cáo: '+e.message}finally{btn.disabled=false}}
+ state={ob,ot,db,dt,cb,ct,warnings};$('result').hidden=false;render();$('message').className='success';$('message').textContent=`Đã tổng hợp 4 tổ chức và ${p.employees.length} mã nhân viên thu (từ ${p.originalCount} dòng). ${state.warnings.length?'Có '+state.warnings.length+' lưu ý cần đối chiếu.':'Không phát hiện thiếu mã ở danh sách nhân viên.'}`;$('result').scrollIntoView({behavior:'smooth',block:'start'})}catch(e){console.error(e);$('message').className='error';$('message').textContent='Không thể tạo báo cáo: '+e.message}finally{btn.disabled=false}}
 $('run').addEventListener('click',run);$('reset').addEventListener('click',()=>{['plan','bhyt','tn','bhytPrev','tnPrev','d03','d05'].forEach(id=>$(id).value='');$('result').hidden=true;state=null;$('message').textContent='Đã xóa các file đã chọn.'});document.querySelectorAll('.tab').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x===btn));document.querySelectorAll('.panel').forEach(x=>x.classList.toggle('active',x.id===btn.dataset.target))}));
 function exportRows(kind,rows){if(kind==='overview')return [['STT','Tên TCHTPTĐT','Số thực hiện','Số kế hoạch','Tỷ lệ %','Tăng/Giảm tháng trước'],...rows.map((r,i)=>[i+1,r.org,r.current,r.plan,pct(r.current,r.plan),r.current-r.prev]),['','TỔNG CỘNG',total(rows,'current'),total(rows,'plan'),pct(total(rows,'current'),total(rows,'plan')),total(rows,'current')-total(rows,'prev')]];return [['STT','Tên tổ chức','Tên nhân viên','Mã đơn vị','Số thực hiện','Số kế hoạch','Tỷ lệ %','Đánh giá','Tăng/Giảm tháng trước'],...rows.map((r,i)=>[i+1,r.org,r.name,r.code,r.current,r.plan,pct(r.current,r.plan),pct(r.current,r.plan)===null?'—':pct(r.current,r.plan)>=100?'HT':'KHT',r.current-r.prev])]}$('export').addEventListener('click',()=>{if(!state)return;const wb=XLSX.utils.book_new();[['Tong quan BHYT','overview',state.ob],['Tong quan BHXHTN','overview',state.ot],['Chi tiet BHYT','detail',state.db],['Chi tiet BHXHTN','detail',state.dt]].forEach(([name,type,rows])=>{const ws=XLSX.utils.aoa_to_sheet(exportRows(type,rows));ws['!cols']=[{wch:7},{wch:35},{wch:27},{wch:28},{wch:17},{wch:17},{wch:18},{wch:14},{wch:24}];XLSX.utils.book_append_sheet(wb,ws,name)});[['Tang giam BHYT',state.cb.rows],['Tang giam BHXHTN',state.ct.rows]].forEach(([name,rows])=>{const ws=XLSX.utils.aoa_to_sheet(exportChangeRows(rows));ws['!cols']=[{wch:7},{wch:38},{wch:28},{wch:28},{wch:12},{wch:12},{wch:16}];XLSX.utils.book_append_sheet(wb,ws,name)});XLSX.writeFile(wb,'Bao_cao_danh_gia_BHYT_BHXHTN.xlsx')});
 </script></body></html>
