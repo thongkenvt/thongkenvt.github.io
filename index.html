@@ -74,88 +74,67 @@ function detailTable(title,rows){const head=['STT','Tên tổ chức','Tên nhâ
 // Đọc trực tiếp biểu mẫu gốc D03ATS/D05_TS, kể cả khi mã đơn vị nằm ở phần đầu biểu mẫu.
 // Dò toàn bộ sheet, các nhóm dữ liệu và tiêu đề nhiều tầng; không bắt buộc có cột Mã đơn vị.
 function parseChanges(wb,kind){
- const incSet=kind==='bhyt'?new Set(['ON','TM']):new Set(['DL','DT','TM']);
- const decSet=kind==='bhyt'?new Set(['GH']):new Set(['GB','GC','GH']);
- const allCodes=new Set([...incSet,...decSet]);
- const result=[],diagnostics=[];let detected=0,unrecognized=0;
- const isCode=x=>/^[A-Z0-9]{7,45}$/i.test(String(x??'').trim())&&/[0-9]/.test(String(x??''))&&/[A-Za-z]/.test(String(x??''));
- const clean=x=>String(x??'').trim();
- const findCodeInText=x=>{
-  const s=clean(x).replace(/\s+/g,' ');
-  // Mã đơn vị ở dòng thông tin đầu biểu mẫu: 'Mã đơn vị: 4000...'
-  let m=s.match(/(?:mã\s*(?:đơn\s*vị|đv|đại\s*lý|điểm\s*thu)|mã\s*thu|mã\s*tổ\s*chức)\s*[:：-]?\s*([A-Z0-9]{7,45})/i);
-  if(m&&isCode(m[1]))return m[1];
-  return null;
- };
- const noteToken=x=>{
-  const t=clean(x).toUpperCase();
-  if(allCodes.has(t))return t;
-  // Cho phép ghi chú có tiền tố, ví dụ 'TM - ...' hoặc '... (GH)'.
-  const parts=t.match(/[A-Z]{2,3}/g)||[];
-  return parts.find(y=>allCodes.has(y))||null;
- };
- const codeHeader=x=>/^(madvi|madv|madonvi|madonvithu|madaily|madiemthu)$/.test(norm(x))||(/ma(donvi|dv|daily|diemthu)/.test(norm(x)));
- const noteHeader=x=>/(ghichu|noidungtanggiam|matanggiam|mabiendong|lydotanggiam|loaitanggiam|manguoithamgia|tinhtrang)/.test(norm(x));
- const isTitle=x=>/(danhsach|tonghop|baocao|phanchitiet|tongcong|stt|hoten|ngaythang|dienthoai|sotien|diachi|ngay sinh|ngaysinh|thangnam)/.test(norm(x));
- const looksLikeRecord=row=>row.some(v=>{const x=clean(v);return x.length>4&&(/[0-9]{5,}/.test(x)||/\d{1,2}[\/.-]\d{1,2}[\/.-]\d{2,4}/.test(x))})&&row.some(v=>clean(v).length>2);
+ const increases=new Set(kind==='bhyt'?['ON','TM']:['DL','DT','TM']);
+ const decreases=new Set(kind==='bhyt'?['GH']:['GB','GC','GH']);
+ const allowed=new Set([...increases,...decreases]);
+ const result=[],diagnostics=[];
+ const clean=v=>String(v??'').trim();
+ const validCode=v=>/^[A-Z0-9]{5,45}$/i.test(clean(v))&&/\d/.test(clean(v));
+ // Biểu mẫu thực tế: "Mã đơn vị/Điểm thu: 400047...T1    MS thuế: ...".
+ // Phải chấp nhận "/Điểm thu" ở giữa nhãn và dấu hai chấm.
+ function extractCode(cell){
+  const t=clean(cell);
+  const m=t.match(/mã\s*(?:đơn\s*vị|đv)(?:\s*\/\s*điểm\s*thu)?\s*[:：]\s*([A-Z0-9]{5,45})/i);
+  return m&&validCode(m[1])?m[1]:null;
+ }
+ const isCodeHeader=v=>/^(madvi|madv|madonvi|madonvidiemthu|madonvithu|madaily|madiemthu)$/.test(norm(v));
+ const isNoteHeader=v=>/^(ghichu|matanggiam|mabiendong|noidungtanggiam|lydotanggiam|loaitanggiam)$/.test(norm(v));
  for(const sheetName of wb.SheetNames){
   const rows=XLSX.utils.sheet_to_json(wb.Sheets[sheetName],{header:1,defval:'',raw:false,blankrows:false});
-  if(!rows.length)continue;
-  let activeCode=null,codeCol=-1,noteCol=-1,foundHeader=false,blockRecords=0;
-  const codeCandidates=new Set();
-  // Các biểu mẫu BHXH thường ghi 'Mã đơn vị:' trong ô đầu, hoặc 'Mã số thu:' trong ô tiếp theo.
-  for(let ri=0;ri<rows.length;ri++){
-   const row=rows[ri]||[];
-   const texts=row.map(clean);
-   const joined=texts.join(' ');
-   const headerCodes=texts.map(findCodeInText).filter(Boolean);
-   if(headerCodes.length){activeCode=headerCodes[0];codeCandidates.add(activeCode)}
-   // Có mẫu ghi nhãn một ô, mã nằm ở ô bên cạnh.
-   for(let j=0;j<texts.length-1;j++){
-    if(/^(mã\s*(đơn\s*vị|đv|đại\s*lý|thu|điểm\s*thu))\s*[:：]?$/.test(texts[j].toLowerCase())&&isCode(texts[j+1])){
-     activeCode=texts[j+1];codeCandidates.add(activeCode);
+  let activeCode='',noteCol=-1,codeCol=-1,records=0,blocks=0;
+  const samples=[];
+  for(const row of rows){
+   const cells=(row||[]).map(clean);
+   const headCode=cells.map(extractCode).find(Boolean);
+   if(headCode){
+    activeCode=headCode;noteCol=-1;codeCol=-1;blocks++;
+    if(samples.length<4)samples.push(activeCode);
+    continue;
+   }
+   // Dự phòng nhãn và giá trị nằm ở hai ô liền nhau.
+   for(let j=0;j<cells.length-1;j++){
+    if(/^mã\s*(?:đơn\s*vị|đv)(?:\s*\/\s*điểm\s*thu)?\s*[:：]?\s*$/i.test(cells[j])&&validCode(cells[j+1])){
+     activeCode=cells[j+1];noteCol=-1;codeCol=-1;blocks++;
+     if(samples.length<4)samples.push(activeCode);
     }
    }
-   // Dò dòng tiêu đề (kể cả tiêu đề nhiều tầng) và tìm cột Ghi chú, mã đơn vị nếu có.
-   const nc=texts.findIndex(noteHeader),cc=texts.findIndex(codeHeader);
-   if(nc>=0){noteCol=nc;foundHeader=true}
-   if(cc>=0){codeCol=cc;foundHeader=true}
-   // Một số báo cáo không ghi tên cột Ghi chú: dò vị trí theo các mã biến động thực tế.
-   if(noteCol<0&&ri<Math.min(rows.length,250)){
-    const sample=rows.slice(ri,Math.min(rows.length,ri+35));
-    const scores=new Map();
-    for(const sr of sample)for(let j=0;j<sr.length;j++){
-     const v=clean(sr[j]).toUpperCase();if(allCodes.has(v))scores.set(j,(scores.get(j)||0)+1);
-    }
-    const ranked=[...scores].sort((x,y)=>y[1]-x[1]);
-    if(ranked.length&&ranked[0][1]>=2)noteCol=ranked[0][0];
+   const nc=cells.findIndex(isNoteHeader);
+   if(nc>=0){noteCol=nc;continue}
+   const cc=cells.findIndex(isCodeHeader);
+   if(cc>=0){codeCol=cc;continue}
+   // Chỉ đếm dòng người tham gia: STT là số, cột B là họ tên,
+   // cột C có mã số/định danh. Loại dòng tổng hợp, tiêu đề và chú thích.
+   if(!/^\d+$/.test(cells[0]||'')||!(cells[1]||'')||!(cells[2]||''))continue;
+   const code=codeCol>=0&&validCode(cells[codeCol])?cells[codeCol]:activeCode;
+   if(!validCode(code))continue;
+   let token=noteCol>=0?(cells[noteCol]||'').toUpperCase():'';
+   if(!allowed.has(token)){
+    // Dò mã chính xác ở cột ghi chú nếu biểu mẫu bị thiếu tiêu đề.
+    const hits=cells.map((v,j)=>({v:v.toUpperCase(),j})).filter(x=>allowed.has(x.v));
+    if(hits.length!==1)continue;
+    token=hits[0].v;
+    if(noteCol<0)noteCol=hits[0].j;
    }
-   // Không tính dòng tiêu đề, tổng cộng, dòng giải thích hoặc thông tin đầu biểu mẫu.
-   if(isTitle(joined)&&!looksLikeRecord(row))continue;
-   let rowCode=codeCol>=0?clean(row[codeCol]):'';
-   if(!isCode(rowCode))rowCode=activeCode||'';
-   if(!isCode(rowCode))continue;
-   let token=noteCol>=0?noteToken(row[noteCol]):null;
-   // Dự phòng: trong trường hợp Ghi chú ở vị trí khác, chỉ chấp nhận mã nguyên vẹn
-   // và ưu tiên cột đã được nhận diện từ nhiều dòng.
-   if(!token){
-    const matches=[];for(let j=0;j<row.length;j++)if(allCodes.has(clean(row[j]).toUpperCase()))matches.push({j,t:clean(row[j]).toUpperCase()});
-    if(matches.length===1){token=matches[0].t; if(noteCol<0)noteCol=matches[0].j}
-   }
-   if(!token)continue;
-   // Loại các dòng chỉ chứa mã mà không có thông tin đối tượng.
-   const meaningful=row.filter((v,j)=>j!==noteCol&&j!==codeCol&&clean(v)!=='');
-   if(meaningful.length<2)continue;
-   detected++;blockRecords++;
-   result.push({code:rowCode,inc:incSet.has(token)?1:0,dec:decSet.has(token)?1:0});
+   records++;
+   result.push({code,inc:increases.has(token)?1:0,dec:decreases.has(token)?1:0});
   }
-  diagnostics.push({sheet:sheetName,records:blockRecords,hasHeader:foundHeader,codeSamples:[...codeCandidates].slice(0,3)});
+  diagnostics.push({sheet:sheetName,records,blocks,codeSamples:samples});
  }
  if(!result.length){
-  const detail=diagnostics.map(d=>d.sheet+': '+d.records+' dòng; mã đầu biểu mẫu '+(d.codeSamples.join(', ')||'chưa thấy')).join(' | ');
-  throw Error((kind==='bhyt'?'D03ATS':'D05_TS')+' chưa nhận diện được dòng phát sinh từ biểu mẫu gốc. '+detail+'. Hãy gửi ảnh 15 dòng đầu và một vài dòng chi tiết nếu lỗi tiếp tục.');
+  const info=diagnostics.map(d=>`${d.sheet}: ${d.records} dòng; ${d.blocks} biểu mẫu; mã ví dụ ${d.codeSamples.join(', ')||'chưa thấy'}`).join(' | ');
+  throw Error((kind==='bhyt'?'D03ATS':'D05_TS')+' không nhận diện được phát sinh. '+info);
  }
- return {data:result,identified:detected,unrecognized,sheet:diagnostics.map(d=>d.sheet).join(', '),diagnostics};
+ return {data:result,identified:result.length,unrecognized:0,sheet:diagnostics.map(d=>d.sheet).join(', '),diagnostics};
 }
 function changeCodeMap(parsed){
  const map=new Map();
