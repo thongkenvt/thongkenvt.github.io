@@ -9,8 +9,8 @@
 <div class="upload"><label for="tn">3. THONGKEDOITUONGTHAMGIABHXHTN (tháng này)</label><input type="file" id="tn" accept=".xls,.xlsx,.csv"><small>Các cột: Mã đơn vị, Tên đơn vị, Số lao động.</small></div>
 <div class="upload"><label for="bhytPrev">4. C12_CHI_TIEU_thangtruoc</label><input type="file" id="bhytPrev" accept=".xls,.xlsx,.csv"><small>Dữ liệu BHYT tháng trước.</small></div>
 <div class="upload"><label for="tnPrev">5. THONGKEDOITUONGTHAMGIABHXHTN_thangtruoc</label><input type="file" id="tnPrev" accept=".xls,.xlsx,.csv"><small>Dữ liệu BHXH tự nguyện tháng trước.</small></div>
-<div class="upload"><label for="d03">6. D03ATS – phát sinh BHYT</label><input type="file" id="d03" accept=".xls,.xlsx,.csv"><small>Ghi chú: ON, TM (tăng); GH (giảm).</small></div>
-<div class="upload"><label for="d05">7. D05_TS – phát sinh BHXH tự nguyện</label><input type="file" id="d05" accept=".xls,.xlsx,.csv"><small>Ghi chú: DL, DT, TM (tăng); GB, GC, GH (giảm).</small></div></div>
+<div class="upload"><label for="d03">6. D03ATS – phát sinh BHYT</label><input type="file" id="d03" accept=".xls,.xlsx,.csv"><small>Đọc biểu mẫu gốc: nhận mã đơn vị từ phần thông tin đầu báo cáo hoặc cột mã; ON, TM (tăng), GH (giảm).</small></div>
+<div class="upload"><label for="d05">7. D05_TS – phát sinh BHXH tự nguyện</label><input type="file" id="d05" accept=".xls,.xlsx,.csv"><small>Đọc biểu mẫu gốc: nhận mã đơn vị từ phần thông tin đầu báo cáo hoặc cột mã; DL, DT, TM (tăng); GB, GC, GH (giảm).</small></div></div>
 <div class="hint"><b>Quy tắc phân bổ:</b> Nếu nhiều nhân viên dùng cùng một mã đơn vị trong Sheet2, số thực hiện của mã đó được <b>chia đều theo số nguyên</b>; phần dư phân cho nhân viên theo thứ tự từ trên xuống dưới. Ô mã đơn vị trống trong nhóm tổ chức được hiểu là tiếp tục sử dụng mã ở dòng nhân viên gần nhất phía trên. Nếu mã trống ngay đầu nhóm thì nhân viên đó chưa có mã để đối chiếu.</div>
 <div class="actions"><button id="run">Tạo báo cáo</button><button id="reset" class="secondary">Xóa file đã chọn</button></div><div id="message" role="status"></div></section>
 <section class="card" id="result" hidden><h2>Kết quả đánh giá</h2><div class="tabs"><button class="tab active" data-target="overview">Phần 1 · Đánh giá tổng quan</button><button class="tab" data-target="detail">Phần 2 · Đánh giá chi tiết</button><button class="tab" data-target="changes">Phần 3 · Đánh giá tăng giảm</button></div><div id="overview" class="panel active"></div><div id="detail" class="panel"><p class="muted">Kết quả được chia theo từng tổ chức; mỗi tổ chức gồm mục a. BHXH tự nguyện và b. BHYT.</p><div id="detailTables"></div></div><div id="changes" class="panel"><p class="muted">Phát sinh tăng/giảm theo từng tổ chức và nhân viên. Nếu một mã đơn vị có cả tăng và giảm, cả hai được tính bằng 0 theo yêu cầu.</p><div id="changeTables"></div></div><div class="actions"><button id="export">Xuất báo cáo Excel (6 sheet)</button></div></section>
@@ -71,39 +71,91 @@ function total(rows,key){return rows.reduce((s,r)=>s+(r[key]||0),0)}
 function overviewTable(title,rows){const head=['STT','Tên TCHTPTĐT','Số thực hiện','Số kế hoạch','Tỷ lệ % so với kế hoạch','Tăng/Giảm so với tháng trước'];const body=rows.map((r,i)=>[i+1,esc(r.org),fmt(r.current),fmt(r.plan),fmtPct(pct(r.current,r.plan)),delta(r.current-r.prev)]);const c=total(rows,'current'),p=total(rows,'plan'),pr=total(rows,'prev');return `<h3>${title}</h3>`+table(head,body,['','TỔNG CỘNG',fmt(c),fmt(p),fmtPct(pct(c,p)),delta(c-pr)])}
 function detailTable(title,rows){const head=['STT','Tên tổ chức','Tên nhân viên','Mã đơn vị','Số thực hiện','Số kế hoạch','Tỷ lệ % so với kế hoạch','Đánh giá','Tăng/Giảm so với tháng trước'];const body=rows.map((r,i)=>{const rate=pct(r.current,r.plan),evaluation=rate===null?'—':rate>=100?'<span class="pill good">HT</span>':'<span class="pill bad">KHT</span>';return [i+1,esc(r.org),esc(r.name),esc(r.code||'Chưa có mã'),fmt(r.current),fmt(r.plan),fmtPct(rate),evaluation,delta(r.current-r.prev)]});const c=total(rows,'current'),p=total(rows,'plan'),pr=total(rows,'prev');return `<h3>${title}</h3>`+table(head,body,['','TỔNG CỘNG','', '',fmt(c),fmt(p),fmtPct(pct(c,p)),'—',delta(c-pr)])}
 
-// Đọc bảng phát sinh D03ATS/D05_TS. Không dựa vào vị trí cột cố định.
+// Đọc trực tiếp biểu mẫu gốc D03ATS/D05_TS, kể cả khi mã đơn vị nằm ở phần đầu biểu mẫu.
+// Dò toàn bộ sheet, các nhóm dữ liệu và tiêu đề nhiều tầng; không bắt buộc có cột Mã đơn vị.
 function parseChanges(wb,kind){
- const increase=kind==='bhyt'?new Set(['ON','TM']):new Set(['DL','DT','TM']);
- const decrease=kind==='bhyt'?new Set(['GH']):new Set(['GB','GC','GH']);
- let parsed=[],best=null;
+ const incSet=kind==='bhyt'?new Set(['ON','TM']):new Set(['DL','DT','TM']);
+ const decSet=kind==='bhyt'?new Set(['GH']):new Set(['GB','GC','GH']);
+ const allCodes=new Set([...incSet,...decSet]);
+ const result=[],diagnostics=[];let detected=0,unrecognized=0;
+ const isCode=x=>/^[A-Z0-9]{7,45}$/i.test(String(x??'').trim())&&/[0-9]/.test(String(x??''))&&/[A-Za-z]/.test(String(x??''));
+ const clean=x=>String(x??'').trim();
+ const findCodeInText=x=>{
+  const s=clean(x).replace(/\s+/g,' ');
+  // Mã đơn vị ở dòng thông tin đầu biểu mẫu: 'Mã đơn vị: 4000...'
+  let m=s.match(/(?:mã\s*(?:đơn\s*vị|đv|đại\s*lý|điểm\s*thu)|mã\s*thu|mã\s*tổ\s*chức)\s*[:：-]?\s*([A-Z0-9]{7,45})/i);
+  if(m&&isCode(m[1]))return m[1];
+  return null;
+ };
+ const noteToken=x=>{
+  const t=clean(x).toUpperCase();
+  if(allCodes.has(t))return t;
+  // Cho phép ghi chú có tiền tố, ví dụ 'TM - ...' hoặc '... (GH)'.
+  const parts=t.match(/[A-Z]{2,3}/g)||[];
+  return parts.find(y=>allCodes.has(y))||null;
+ };
+ const codeHeader=x=>/^(madvi|madv|madonvi|madonvithu|madaily|madiemthu)$/.test(norm(x))||(/ma(donvi|dv|daily|diemthu)/.test(norm(x)));
+ const noteHeader=x=>/(ghichu|noidungtanggiam|matanggiam|mabiendong|lydotanggiam|loaitanggiam|manguoithamgia|tinhtrang)/.test(norm(x));
+ const isTitle=x=>/(danhsach|tonghop|baocao|phanchitiet|tongcong|stt|hoten|ngaythang|dienthoai|sotien|diachi|ngay sinh|ngaysinh|thangnam)/.test(norm(x));
+ const looksLikeRecord=row=>row.some(v=>{const x=clean(v);return x.length>4&&(/[0-9]{5,}/.test(x)||/\d{1,2}[\/.-]\d{1,2}[\/.-]\d{2,4}/.test(x))})&&row.some(v=>clean(v).length>2);
  for(const sheetName of wb.SheetNames){
   const rows=XLSX.utils.sheet_to_json(wb.Sheets[sheetName],{header:1,defval:'',raw:false,blankrows:false});
-  for(let ri=0;ri<Math.min(100,rows.length);ri++){
-   const h=(rows[ri]||[]).map(x=>String(x??''));
-   const ci=headerIndex(h,['Mã đơn vị','Mã ĐV','madvi','Mã đơn vị thu','Mã đại lý'],false);
-   const ni=headerIndex(h,['Ghi chú','Ghi chu','Mã tăng giảm','Mã biến động','Loại tăng giảm'],false);
-   // Một số mẫu dùng tiêu đề có tiền tố hoặc dấu xuống dòng.
-   const code=ci>=0?ci:headerIndex(h,['Mã đơn vị','Mã ĐV','madvi']);
-   const note=ni>=0?ni:headerIndex(h,['Ghi chú','Ghi chu','Mã tăng giảm','Mã biến động']);
-   if(code<0||note<0)continue;
-   const data=[];let identified=0,unrecognized=0;
-   for(const row of rows.slice(ri+1)){
-    const rawCode=String(row[code]??'').trim();
-    if(!rawCode)continue;
-    const rawNote=String(row[note]??'').trim().toUpperCase();
-    // Chỉ nhận mã ghi chú nguyên vẹn, tránh ON trùng trong một từ khác.
-    const tokens=rawNote.match(/[A-Z]{2,3}/g)||[];
-    const inc=tokens.some(x=>increase.has(x));
-    const dec=tokens.some(x=>decrease.has(x));
-    if(inc||dec){identified++;data.push({code:rawCode,inc:inc?1:0,dec:dec?1:0});}
-    else if(rawNote)unrecognized++;
+  if(!rows.length)continue;
+  let activeCode=null,codeCol=-1,noteCol=-1,foundHeader=false,blockRecords=0;
+  const codeCandidates=new Set();
+  // Các biểu mẫu BHXH thường ghi 'Mã đơn vị:' trong ô đầu, hoặc 'Mã số thu:' trong ô tiếp theo.
+  for(let ri=0;ri<rows.length;ri++){
+   const row=rows[ri]||[];
+   const texts=row.map(clean);
+   const joined=texts.join(' ');
+   const headerCodes=texts.map(findCodeInText).filter(Boolean);
+   if(headerCodes.length){activeCode=headerCodes[0];codeCandidates.add(activeCode)}
+   // Có mẫu ghi nhãn một ô, mã nằm ở ô bên cạnh.
+   for(let j=0;j<texts.length-1;j++){
+    if(/^(mã\s*(đơn\s*vị|đv|đại\s*lý|thu|điểm\s*thu))\s*[:：]?$/.test(texts[j].toLowerCase())&&isCode(texts[j+1])){
+     activeCode=texts[j+1];codeCandidates.add(activeCode);
+    }
    }
-   const candidate={data,identified,unrecognized,sheet:sheetName,headerRow:ri+1};
-   if(!best||candidate.identified>best.identified)best=candidate;
+   // Dò dòng tiêu đề (kể cả tiêu đề nhiều tầng) và tìm cột Ghi chú, mã đơn vị nếu có.
+   const nc=texts.findIndex(noteHeader),cc=texts.findIndex(codeHeader);
+   if(nc>=0){noteCol=nc;foundHeader=true}
+   if(cc>=0){codeCol=cc;foundHeader=true}
+   // Một số báo cáo không ghi tên cột Ghi chú: dò vị trí theo các mã biến động thực tế.
+   if(noteCol<0&&ri<Math.min(rows.length,250)){
+    const sample=rows.slice(ri,Math.min(rows.length,ri+35));
+    const scores=new Map();
+    for(const sr of sample)for(let j=0;j<sr.length;j++){
+     const v=clean(sr[j]).toUpperCase();if(allCodes.has(v))scores.set(j,(scores.get(j)||0)+1);
+    }
+    const ranked=[...scores].sort((x,y)=>y[1]-x[1]);
+    if(ranked.length&&ranked[0][1]>=2)noteCol=ranked[0][0];
+   }
+   // Không tính dòng tiêu đề, tổng cộng, dòng giải thích hoặc thông tin đầu biểu mẫu.
+   if(isTitle(joined)&&!looksLikeRecord(row))continue;
+   let rowCode=codeCol>=0?clean(row[codeCol]):'';
+   if(!isCode(rowCode))rowCode=activeCode||'';
+   if(!isCode(rowCode))continue;
+   let token=noteCol>=0?noteToken(row[noteCol]):null;
+   // Dự phòng: trong trường hợp Ghi chú ở vị trí khác, chỉ chấp nhận mã nguyên vẹn
+   // và ưu tiên cột đã được nhận diện từ nhiều dòng.
+   if(!token){
+    const matches=[];for(let j=0;j<row.length;j++)if(allCodes.has(clean(row[j]).toUpperCase()))matches.push({j,t:clean(row[j]).toUpperCase()});
+    if(matches.length===1){token=matches[0].t; if(noteCol<0)noteCol=matches[0].j}
+   }
+   if(!token)continue;
+   // Loại các dòng chỉ chứa mã mà không có thông tin đối tượng.
+   const meaningful=row.filter((v,j)=>j!==noteCol&&j!==codeCol&&clean(v)!=='');
+   if(meaningful.length<2)continue;
+   detected++;blockRecords++;
+   result.push({code:rowCode,inc:incSet.has(token)?1:0,dec:decSet.has(token)?1:0});
   }
+  diagnostics.push({sheet:sheetName,records:blockRecords,hasHeader:foundHeader,codeSamples:[...codeCandidates].slice(0,3)});
  }
- if(!best)throw Error('File '+(kind==='bhyt'?'D03ATS':'D05_TS')+' không tìm thấy cột Mã đơn vị và Ghi chú. Hãy kiểm tra tên cột trong file.');
- return best;
+ if(!result.length){
+  const detail=diagnostics.map(d=>d.sheet+': '+d.records+' dòng; mã đầu biểu mẫu '+(d.codeSamples.join(', ')||'chưa thấy')).join(' | ');
+  throw Error((kind==='bhyt'?'D03ATS':'D05_TS')+' chưa nhận diện được dòng phát sinh từ biểu mẫu gốc. '+detail+'. Hãy gửi ảnh 15 dòng đầu và một vài dòng chi tiết nếu lỗi tiếp tục.');
+ }
+ return {data:result,identified:detected,unrecognized,sheet:diagnostics.map(d=>d.sheet).join(', '),diagnostics};
 }
 function changeCodeMap(parsed){
  const map=new Map();
