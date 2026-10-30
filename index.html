@@ -76,21 +76,43 @@ select{background:#11385d;border:1px solid #43739b;color:#f1f9ff}.chart-panel,#c
 @media(max-width:640px){.hero{padding:0 14px}.hero-inner{padding:18px 0 32px}.hero-brand{gap:10px}.brand-emblem{width:63px;height:63px;flex-basis:63px}.brand-eyebrow{font-size:10px}.brand-sub{font-size:10px}.hero-main{margin:22px 0}.hero h1{font-size:clamp(23px,6vw,32px)}.hero-nav{gap:9px}.hero-nav-item{padding:10px;gap:8px;border-radius:12px}.hero-nav-icon{flex-basis:30px;width:30px;height:30px;font-size:20px}.hero-nav-item b{font-size:13px}.hero-nav-item small{font-size:10px}main{padding:0 10px;margin:15px auto 30px}.card{padding:14px}.tabs{top:0}}
 @media(prefers-reduced-motion:reduce){.hero-nav-item,.chart-panel,.summary>div{transition:none;transform:none}}
 
+
+/* Release 3D-20261030-v2: unmistakable visual update */
+html,body{background-color:#06152b!important}
+body{background-image:radial-gradient(circle at 82% 8%,#1675c355,transparent 30%),radial-gradient(circle at 12% 30%,#16518c55,transparent 38%),linear-gradient(150deg,#061326,#071d39 60%,#041329)!important;color:#e8f5ff!important}
+header.hero{background:radial-gradient(circle at 70% 5%,#169bff55,transparent 35%),linear-gradient(120deg,#03142d,#06447c 70%,#03254c)!important;box-shadow:0 22px 65px #0009,inset 0 -2px #2bcdff99!important}
+.hero-inner{padding-top:32px!important;padding-bottom:46px!important}
+.release-label{display:inline-flex;align-items:center;margin-bottom:17px;padding:8px 14px;border-radius:999px;background:#00baf21c;border:1px solid #38d8ff85;color:#83eaff;font-weight:800;letter-spacing:1.5px;font-size:11px;box-shadow:0 0 20px #18a9f72a}
+.hero-nav-item{cursor:pointer;position:relative;overflow:hidden}
+.hero-nav-item::after{content:'';position:absolute;inset:0;background:linear-gradient(115deg,transparent 28%,#ffffff18 50%,transparent 72%);transform:translateX(-110%);transition:transform .6s ease;pointer-events:none}
+.hero-nav-item:hover::after,.hero-nav-item:focus-visible::after{transform:translateX(110%)}
+.hero-nav-item:focus-visible{outline:3px solid #6ce9ff;outline-offset:3px}
+.hero-nav-item.is-selected{background:linear-gradient(125deg,#236cf1,#0567c8)!important;border-color:#64ddff!important;box-shadow:0 0 26px #2aa9ff77,0 18px 32px #001c3d!important}
+main .card{background:linear-gradient(150deg,#17395f,#0a2442)!important;border:1px solid #31658f!important;box-shadow:inset 0 1px #ffffff1c,0 20px 40px #0007!important}
+main .card h2{color:#f4fbff!important}
+main .card h3{color:#8cdbff!important}
+main .upload{background:linear-gradient(150deg,#204a72,#0b2c4e)!important;color:#e8f5ff!important}
+main .tablewrap{background:#0d2a4b!important}
+main table th{background:#1a4c7d!important;color:#c5efff!important}
+main table td{color:#e4f3ff!important}
+main .tabs{background:#071c37!important}
+main .tab.active{background:linear-gradient(135deg,#2078ff,#00b5e9)!important;color:white!important}
+@media(max-width:680px){.release-label{font-size:9px;letter-spacing:.5px}.hero-nav-item{min-height:70px}}
 </style></head><body>
-<header class="hero"><div class="hero-inner"><div class="hero-brand"><div class="brand-emblem" aria-label="Logo Bảo hiểm xã hội Việt Nam"><img src="logo-bhxh.png" alt="Logo Bảo hiểm xã hội Việt Nam" width="56" height="56"></div><div><span class="brand-eyebrow">BẢO HIỂM XÃ HỘI · BÁO CÁO PHÂN TÍCH</span><span class="brand-sub">Công cụ tổng hợp dữ liệu &amp; đánh giá chỉ tiêu</span></div></div><div class="hero-main"><h1>TỔNG HỢP, ĐÁNH GIÁ CHỈ TIÊU<br><span>BHYT &amp; BHXH TỰ NGUYỆN</span></h1><p>Đánh giá tổng quan · Chi tiết nhân viên · Tăng giảm đối tượng · Biểu đồ trực quan</p></div><div class="hero-decoration" aria-hidden="true"></div><div class="hero-nav" aria-label="Các mục báo cáo">
-<div class="hero-nav-item"><span class="hero-nav-icon icon-a">▥</span><span><b>Phần 1</b><small>Đánh giá tổng quan</small></span></div>
-<div class="hero-nav-item"><span class="hero-nav-icon icon-b">≡</span><span><b>Phần 2</b><small>Đánh giá chi tiết</small></span></div>
-<div class="hero-nav-item"><span class="hero-nav-icon icon-c">⇄</span><span><b>Phần 3</b><small>Đánh giá tăng giảm</small></span></div>
-<div class="hero-nav-item"><span class="hero-nav-icon icon-d">▥</span><span><b>Phần 4</b><small>Biểu đồ trực quan</small></span></div>
+<header class="hero"><div class="hero-inner"><div class="hero-brand"><div class="brand-emblem" aria-label="Logo Bảo hiểm xã hội Việt Nam"><img src="logo-bhxh.png" alt="Logo Bảo hiểm xã hội Việt Nam" width="56" height="56"></div><div><span class="brand-eyebrow">BẢO HIỂM XÃ HỘI · BÁO CÁO PHÂN TÍCH</span><span class="brand-sub">Công cụ tổng hợp dữ liệu &amp; đánh giá chỉ tiêu</span></div></div><div class="hero-main"><div class="release-label">GIAO DIỆN MỚI · DASHBOARD 3D · 30.10.2026</div><h1>TỔNG HỢP, ĐÁNH GIÁ CHỈ TIÊU<br><span>BHYT &amp; BHXH TỰ NGUYỆN</span></h1><p>Đánh giá tổng quan · Chi tiết nhân viên · Tăng giảm đối tượng · Biểu đồ trực quan</p></div><div class="hero-decoration" aria-hidden="true"></div><div class="hero-nav" aria-label="Các mục báo cáo">
+<div class="hero-nav-item" role="button" tabindex="0"><span class="hero-nav-icon icon-a">▥</span><span><b>Phần 1</b><small>Đánh giá tổng quan</small></span></div>
+<div class="hero-nav-item" role="button" tabindex="0"><span class="hero-nav-icon icon-b">≡</span><span><b>Phần 2</b><small>Đánh giá chi tiết</small></span></div>
+<div class="hero-nav-item" role="button" tabindex="0"><span class="hero-nav-icon icon-c">⇄</span><span><b>Phần 3</b><small>Đánh giá tăng giảm</small></span></div>
+<div class="hero-nav-item" role="button" tabindex="0"><span class="hero-nav-icon icon-d">▥</span><span><b>Phần 4</b><small>Biểu đồ trực quan</small></span></div>
 </div></div></header><main>
 <section class="card upload-card" id="uploadCard"><div class="upload-topline"><div><span class="section-eyebrow">BƯỚC 01 · DỮ LIỆU ĐẦU VÀO</span><h2>Nhập 6 file dữ liệu</h2></div><span class="step-chip">Xử lý trên thiết bị của bạn</span></div><div id="uploadContent"><p class="muted">Chọn file BHYT, danh sách BHXH tự nguyện tháng 9 và tháng 10, cùng file nhân viên thu và kế hoạch. File chỉ được xử lý trong trình duyệt, không tải lên máy chủ.</p><div class="uploadgrid">
 <div class="upload"><label for="plan">1. DS nhân viên thu.xlsx</label><input type="file" id="plan" accept=".xls,.xlsx,.csv"><small>Sheet1: chỉ tiêu tổ chức. Sheet2: nhân viên, mã đơn vị và chỉ tiêu.</small></div>
-<div class="upload"><label for="bhyt">2. C12_CHI_TIEU (tháng này)</label><input type="file" id="bhyt" accept=".xls,.xlsx,.csv"><small>Các cột: madvi, tendvi, sldBhytCk.</small></div>
+<div class="upload"><label for="bhyt">2. C12_CHI_TIEU – Tháng BC</label><input type="file" id="bhyt" accept=".xls,.xlsx,.csv"><small>Các cột: madvi, tendvi, sldBhytCk.</small></div>
 
-<div class="upload"><label for="bhytPrev">3. C12_CHI_TIEU_thangtruoc</label><input type="file" id="bhytPrev" accept=".xls,.xlsx,.csv"><small>Dữ liệu BHYT tháng trước.</small></div>
+<div class="upload"><label for="bhytPrev">3. C12_CHI_TIEU – Tháng trước</label><input type="file" id="bhytPrev" accept=".xls,.xlsx,.csv"><small>Dữ liệu BHYT tháng trước.</small></div>
 
-<div class="upload"><label for="d03">4. D03ATS – phát sinh BHYT</label><input type="file" id="d03" accept=".xls,.xlsx,.csv"><small>Đọc biểu mẫu gốc: nhận mã đơn vị từ phần thông tin đầu báo cáo hoặc cột mã; ON, TM (tăng), GH (giảm).</small></div>
-<div class="upload"><label for="d05">5. DSBHXHTUNGUYEN – Tháng 10</label><input type="file" id="d05" accept=".xls,.xlsx,.csv"><small>Danh sách người tham gia tháng 10; cần cột Mã đơn vị và Sổ sổ (mã số BHXH).</small></div><div class="upload"><label for="tnListPrev">6. DSBHXHTUNGUYEN – Tháng 9</label><input type="file" id="tnListPrev" accept=".xls,.xlsx,.csv"><small>Danh sách người tham gia tháng 9; đối chiếu theo mã số BHXH, không dùng họ tên.</small></div></div>
+<div class="upload"><label for="d03">4. D03ATS – Tháng BC</label><input type="file" id="d03" accept=".xls,.xlsx,.csv"><small>Đọc biểu mẫu gốc: nhận mã đơn vị từ phần thông tin đầu báo cáo hoặc cột mã; ON, TM (tăng), GH (giảm).</small></div>
+<div class="upload"><label for="d05">5. DSBHXHTUNGUYEN – Tháng BC</label><input type="file" id="d05" accept=".xls,.xlsx,.csv"><small>Danh sách người tham gia tháng 10; cần cột Mã đơn vị và Sổ sổ (mã số BHXH).</small></div><div class="upload"><label for="tnListPrev">6. DSBHXHTUNGUYEN – Tháng trước</label><input type="file" id="tnListPrev" accept=".xls,.xlsx,.csv"><small>Danh sách người tham gia tháng 9; đối chiếu theo mã số BHXH, không dùng họ tên.</small></div></div>
 <div class="hint"><b>Quy tắc phân bổ:</b> Nếu nhiều nhân viên dùng cùng một mã đơn vị trong Sheet2, số thực hiện của mã đó được <b>chia đều theo số nguyên</b>; phần dư phân cho nhân viên theo thứ tự từ trên xuống dưới. Ô mã đơn vị trống trong nhóm tổ chức được hiểu là tiếp tục sử dụng mã ở dòng nhân viên gần nhất phía trên. Nếu mã trống ngay đầu nhóm thì nhân viên đó chưa có mã để đối chiếu.</div>
 <div class="actions"><button id="run">Tạo báo cáo</button><button id="reset" class="secondary">Xóa file đã chọn</button></div><div id="message" role="status"></div></div></section>
 <section class="card result-card" id="result" hidden><div class="result-heading"><div><span class="section-eyebrow">BƯỚC 02 · KẾT QUẢ PHÂN TÍCH</span><h2>Kết quả đánh giá</h2></div><button id="toggleUpload" class="secondary compact" type="button" aria-expanded="false">Hiện khu vực nhập file</button></div><div class="tabs" role="tablist" aria-label="Các phần báo cáo"><button class="tab active" data-target="overview">Phần 1 · Đánh giá tổng quan</button><button class="tab" data-target="detail">Phần 2 · Đánh giá chi tiết</button><button class="tab" data-target="changes">Phần 3 · Đánh giá tăng giảm</button><button class="tab" data-target="charts">Phần 4 · Biểu đồ trực quan</button></div><div id="overview" class="panel active"></div><div id="detail" class="panel"><p class="muted">Kết quả theo từng tổ chức. Đối với BHXH tự nguyện, Phần 1 và Phần 2 cùng tổng hợp theo mã đơn vị trong Sheet2; đối với BHYT, dòng CHƯA PHÂN BỔ / CẦN ĐỐI SOÁT là số chênh giữa tổng theo tên tổ chức và số phân bổ theo mã nhân viên; không được coi là số thực hiện của một nhân viên.</p><div id="detailTables"></div></div><div id="changes" class="panel"><p class="muted">Phát sinh tăng/giảm theo từng tổ chức và nhân viên. BHXH tự nguyện đối chiếu theo cặp mã số BHXH + mã đơn vị giữa tháng 9 và tháng 10; chuyển mã đơn vị được ghi tăng tại mã mới và giảm tại mã cũ.</p><div id="changeTables"></div></div><div id="charts" class="panel"><div class="chart-intro">Biểu đồ xếp hạng nhân viên theo tỷ lệ hoàn thành kế hoạch, từ cao xuống thấp. Mỗi tổ chức có hai biểu đồ độc lập: BHXH tự nguyện và BHYT. Nhân viên chưa có chỉ tiêu được liệt kê riêng.</div><div id="chartTables"></div></div><div class="actions"><button id="export">Xuất báo cáo Excel (6 sheet)</button></div></section>
@@ -408,4 +430,18 @@ async function run(){
 }
 $('toggleUpload').addEventListener('click',()=>{const card=$('uploadCard');const collapsed=card.classList.toggle('collapsed');$('toggleUpload').setAttribute('aria-expanded',String(!collapsed));$('toggleUpload').textContent=collapsed?'Hiện khu vực nhập file':'Ẩn khu vực nhập file';if(!collapsed)card.scrollIntoView({behavior:'smooth',block:'start'});});$('run').addEventListener('click',run);$('reset').addEventListener('click',()=>{['plan','bhyt','bhytPrev','d03','d05','tnListPrev'].forEach(id=>$(id).value='');$('result').hidden=true;$('uploadCard').classList.remove('collapsed');state=null;$('message').textContent='Đã xóa các file đã chọn.'});document.querySelectorAll('.tab').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x===btn));document.querySelectorAll('.panel').forEach(x=>x.classList.toggle('active',x.id===btn.dataset.target))}));
 function exportRows(kind,rows){if(kind==='overview')return [['STT','Tên TCHTPTĐT','Số thực hiện','Số kế hoạch','Tỷ lệ %','Tăng/Giảm tháng trước'],...rows.map((r,i)=>[i+1,r.org,r.current,r.plan,pct(r.current,r.plan),r.current-r.prev]),['','TỔNG CỘNG',total(rows,'current'),total(rows,'plan'),pct(total(rows,'current'),total(rows,'plan')),total(rows,'current')-total(rows,'prev')]];return [['STT','Tên tổ chức','Tên nhân viên','Mã đơn vị','Số thực hiện','Số kế hoạch','Tỷ lệ %','Đánh giá','Tăng/Giảm tháng trước'],...rows.map((r,i)=>[i+1,r.org,r.name,r.code,r.current,r.plan,pct(r.current,r.plan),pct(r.current,r.plan)===null?'—':pct(r.current,r.plan)>=100?'HT':'KHT',r.current-r.prev])]}$('export').addEventListener('click',()=>{if(!state)return;const wb=XLSX.utils.book_new();[['Tong quan BHYT','overview',state.ob],['Tong quan BHXHTN','overview',state.ot],['Chi tiet BHYT','detail',state.db],['Chi tiet BHXHTN','detail',state.dt]].forEach(([name,type,rows])=>{const ws=XLSX.utils.aoa_to_sheet(exportRows(type,rows));ws['!cols']=[{wch:7},{wch:35},{wch:27},{wch:28},{wch:17},{wch:17},{wch:18},{wch:14},{wch:24}];XLSX.utils.book_append_sheet(wb,ws,name)});[['Tang giam BHYT',state.cb.rows],['Tang giam BHXHTN',state.ct.rows]].forEach(([name,rows])=>{const ws=XLSX.utils.aoa_to_sheet(exportChangeRows(rows));ws['!cols']=[{wch:7},{wch:38},{wch:28},{wch:28},{wch:12},{wch:12},{wch:16}];XLSX.utils.book_append_sheet(wb,ws,name)});XLSX.writeFile(wb,'Bao_cao_danh_gia_BHYT_BHXHTN.xlsx')});
+</script><script>
+(function(){
+const cards=Array.from(document.querySelectorAll('.hero-nav-item'));
+const tabs=Array.from(document.querySelectorAll('#result .tab'));
+function select(i){
+ cards.forEach((c,j)=>c.classList.toggle('is-selected',i===j));
+ const result=document.getElementById('result');
+ if(result && !result.hidden && tabs[i]){tabs[i].click();result.scrollIntoView({behavior:'smooth',block:'start'});}
+ else{const input=document.getElementById('uploadCard');if(input)input.scrollIntoView({behavior:'smooth',block:'start'});}
+}
+cards.forEach((c,i)=>{c.addEventListener('click',()=>select(i));c.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();select(i)}})});
+if(cards[0])cards[0].classList.add('is-selected');
+tabs.forEach((t,i)=>t.addEventListener('click',()=>cards.forEach((c,j)=>c.classList.toggle('is-selected',i===j))));
+})();
 </script></body></html>
