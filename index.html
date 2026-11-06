@@ -212,7 +212,7 @@ function parsePlan(wb){
 }
 function sumOrg(data,org){return data.reduce((s,r)=>s+(orgOf(r.name)===org?r.value:0),0)}
 function cleanUnitCode(v){
- const raw=String(v??'').trim().replace(/^[\\s'’]+/,'').replace(/[\\u200B-\\u200D\\uFEFF]/g,'');
+ const raw=String(v??'').trim().replace(/^[\s'’]+/,'').replace(/[\u200B-\u200D\uFEFF]/g,'');
  return norm(raw);
 }
 function codeMap(data){const m=new Map();for(const r of data){const key=cleanUnitCode(r.code);if(key)m.set(key,(m.get(key)||0)+r.value)}return m}
@@ -477,7 +477,7 @@ let state=null;
 function render(){const {ob,ot,db,dt,warnings}=state;renderCharts();$('overview').innerHTML=`<div class="summary"><div><b>${fmt(total(ob,'current'))}</b><span>BHYT thực hiện</span></div><div><b>${fmt(total(ot,'current'))}</b><span>BHXH tự nguyện thực hiện</span></div><div><b>${fmt(total(ob,'current')-total(ob,'prev'))}</b><span>Chênh lệch BHYT</span></div><div><b>${fmt(total(ot,'current')-total(ot,'prev'))}</b><span>Chênh lệch BHXH tự nguyện</span></div></div>${overviewTable('1.1. Kết quả BHYT',ob)}${overviewTable('1.2. Kết quả BHXH tự nguyện',ot)}`;
  $('detailTables').innerHTML=ORGS.map((o,i)=>{
  const bhytRows=db.filter(x=>x.org===o.name),tnRows=dt.filter(x=>x.org===o.name);
- const diag=detailCodeDiagnostics(p.employees,bn,bp,'bhyt').filter(m=>m.startsWith(o.name+' ('));
+ const diag=(state.diagnostics||[]).filter(m=>m.startsWith(o.name+' ('));
  const alerts=diag.length?`<div class="notice warn" style="margin:10px 0;padding:12px;border:1px solid #f0b15e;border-radius:10px;color:#ffd99d">${diag.map(esc).join('<br>')}</div>`:'';
  return `<section class="org-report"><h3 class="org-heading">${i+1}. ${esc(o.name)}</h3>${alerts}${detailTable('a. BHXH tự nguyện',tnRows)}${detailTable('b. BHYT',bhytRows)}</section>`;
  }).join('');
@@ -495,6 +495,9 @@ async function run(){
   const bn=parseData(books[1],'bhyt'),bp=parseData(books[2],'bhyt');
   const prevList=parseParticipantList(books[5],'Danh sách tháng 9'),nowList=parseParticipantList(books[4],'Danh sách tháng 10');
   const pt=compareParticipantLists(prevList,nowList);
+  if(!p.employees.length)throw Error('Sheet2 không đọc được nhân viên thu. Kiểm tra tiêu đề và dữ liệu bên dưới.');
+  const totalTnCodes=p.employees.reduce((n,e)=>n+(e.tnCodes||[]).length,0);
+  if(!totalTnCodes)throw Error('Sheet2 không đọc được mã đơn vị BHXH tự nguyện. Kiểm tra cột Mã đơn vị → BHXH tự nguyện.');
   const totals=orgTnTotals(p.employees,prevList,nowList);
   const tn=tnDataFromCounts(totals.current),tp=tnDataFromCounts(totals.previous);
   const bhytNow=codeMap(bn),bhytPrev=codeMap(bp);
@@ -524,7 +527,7 @@ async function run(){
   if(unassignedNow||unassignedPrev)warnings.push(`Ngoài phạm vi các tổ chức trong Sheet2: tháng 10 có ${unassignedNow}, tháng 9 có ${unassignedPrev} lượt người theo mã đơn vị chưa được gán; không tính vào Phần 1.`);
   for(const o of ot){const rows=dt.filter(r=>r.org===o.org);const n=total(rows,'current'),pr=total(rows,'prev');if(n!==o.current||pr!==o.prev)throw Error(`Đối soát BHXH tự nguyện ${o.org} không khớp: tổng quan ${o.current}/${o.prev}, chi tiết ${n}/${pr}.`)}
   if(cb.matched===0)warnings.push('D03ATS không có mã đơn vị nào khớp danh sách nhân viên thu.');
-  state={ob,ot,db,dt,cb,ct,warnings};$('result').hidden=false;render();$('uploadCard').classList.add('collapsed');$('toggleUpload').setAttribute('aria-expanded','false');$('toggleUpload').textContent='Hiện khu vực nhập file';
+  state={ob,ot,db,dt,cb,ct,warnings,diagnostics:detailCodeDiagnostics(p.employees,bn,bp,'bhyt')};$('result').hidden=false;render();$('uploadCard').classList.add('collapsed');$('toggleUpload').setAttribute('aria-expanded','false');$('toggleUpload').textContent='Hiện khu vực nhập file';
   $('message').className='success';$('message').textContent=`Đã tổng hợp ${ORGS.length} tổ chức và ${p.employees.length} mã nhân viên thu. BHXH tự nguyện Phần 1 và Phần 2 đã đối soát khớp theo mã đơn vị (${pt.transferCount} người chuyển đơn vị). ${warnings.length?'Có '+warnings.length+' lưu ý.':''}`;
   $('result').scrollIntoView({behavior:'smooth',block:'start'});
  }catch(e){console.error(e);$('message').className='error';$('message').textContent='Không thể tạo báo cáo: '+e.message}finally{btn.disabled=false}
