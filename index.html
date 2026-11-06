@@ -177,16 +177,20 @@ function parsePlan(wb){
    if(n&&!['tong','tongcong','ten to chuc','tentochuc'].includes(n)){
     const existing=orgNames.find(x=>norm(x)===n);
     const newGroup=existing||orgText;
-    if(!existing)orgNames.push(newGroup);
-    if(newGroup!==group){group=newGroup;lastTn='';lastBhyt=''}
+    if(!existing && name)orgNames.push(newGroup);
+    if(newGroup!==group){group=newGroup;lastTn='';lastBhyt='';previousEmployeeId=''}
    }
    if(!name)continue;
   }
   if(!name||!group)continue;
+  if(!orgNames.some(x=>norm(x)===norm(group)))orgNames.push(group);
+  const employeeId=String(row[employeeIdCol]??'').trim().replace(/['’]/g,'');
+  const sameEmployee=Boolean(employeeId)&&employeeId===previousEmployeeId;
   const explicitTn=String(row[tnCode]??'').trim(),explicitBhyt=String(row[bhytCode]??'').trim();
-  if(explicitTn)lastTn=explicitTn;
-  if(explicitBhyt)lastBhyt=explicitBhyt;
-  employees.push({org:group,name,employeeId:String(row[employeeIdCol]??'').trim().replace(/['’]/g,''),tnCode:lastTn,bhytCode:lastBhyt,tnPlan:num(row[tnPlan]),bhytPlan:num(row[bhytPlan]),row:i+1,explicitTn,explicitBhyt});
+  lastTn=explicitTn||(sameEmployee?lastTn:'');
+  lastBhyt=explicitBhyt||(sameEmployee?lastBhyt:'');
+  previousEmployeeId=employeeId;
+  employees.push({org:group,name,employeeId,tnCode:lastTn,bhytCode:lastBhyt,tnPlan:num(row[tnPlan]),bhytPlan:num(row[bhytPlan]),row:i+1,explicitTn,explicitBhyt});
  }
  // Tổ chức lấy từ Sheet2, chỉ tiêu tổ chức lấy từ Sheet1. Không gán mặc định mã hay tên nào.
  ORGS=orgNames.map(name=>({name}));
@@ -508,7 +512,11 @@ async function run(){
   });
   const ot=totals.overview.map((r,i)=>({...r,plan:p.orgPlans[i].tn}));
   const rb=reconcileDetail(makeDetail(p.employees,bn,bp,'bhyt'),ob,'BHYT');
-  const dt=makeDetail(p.employees,tn,tp,'tn');
+  const tnValues=new Map([...new Set([...totals.current.keys(),...totals.previous.keys()])].map(code=>[code,{
+    current:totals.current.get(code)||0,prev:totals.previous.get(code)||0
+  }]));
+  const tnAllocation=allocateByCode(p.employees,'tn',tnValues,['current','prev']);
+  const dt=tnAllocation.rows.map((r,i)=>({...r,plan:p.employees[i].tnPlan}));
   const db=rb.rows;
   const pb=parseChanges(books[3],'bhyt');
   const cb=makeChanges(p.employees,pb,'bhyt'),ct=makeChanges(p.employees,pt,'tn');
@@ -525,7 +533,7 @@ async function run(){
   const unassignedNow=[...totals.current].filter(([c])=>!totals.codeOrgs.has(c)).reduce((v,[c,n])=>v+n,0);
   const unassignedPrev=[...totals.previous].filter(([c])=>!totals.codeOrgs.has(c)).reduce((v,[c,n])=>v+n,0);
   if(unassignedNow||unassignedPrev)warnings.push(`Ngoài phạm vi các tổ chức trong Sheet2: tháng 10 có ${unassignedNow}, tháng 9 có ${unassignedPrev} lượt người theo mã đơn vị chưa được gán; không tính vào Phần 1.`);
-  for(const o of ot){const rows=dt.filter(r=>r.org===o.org);const n=total(rows,'current'),pr=total(rows,'prev');if(n!==o.current||pr!==o.prev)throw Error(`Đối soát BHXH tự nguyện ${o.org} không khớp: tổng quan ${o.current}/${o.prev}, chi tiết ${n}/${pr}.`)}
+  for(const o of ot){const rows=dt.filter(r=>r.org===o.org);const n=total(rows,'current'),pr=total(rows,'prev');if(n!==o.current||pr!==o.prev)throw Error(`Đối soát BHXH tự nguyện ${o.org} không khớp: tổng quan ${o.current}/${o.prev}, chi tiết ${n}/${pr}. Mã đọc từ Sheet2: ${[...new Set(p.employees.filter(e=>e.org===o.org).flatMap(e=>e.tnCodes||[]))].join('; ')}`)}
   if(cb.matched===0)warnings.push('D03ATS không có mã đơn vị nào khớp danh sách nhân viên thu.');
   state={ob,ot,db,dt,cb,ct,warnings,diagnostics:detailCodeDiagnostics(p.employees,bn,bp,'bhyt')};$('result').hidden=false;render();$('uploadCard').classList.add('collapsed');$('toggleUpload').setAttribute('aria-expanded','false');$('toggleUpload').textContent='Hiện khu vực nhập file';
   $('message').className='success';$('message').textContent=`Đã tổng hợp ${ORGS.length} tổ chức và ${p.employees.length} mã nhân viên thu. BHXH tự nguyện Phần 1 và Phần 2 đã đối soát khớp theo mã đơn vị (${pt.transferCount} người chuyển đơn vị). ${warnings.length?'Có '+warnings.length+' lưu ý.':''}`;
