@@ -98,6 +98,10 @@ main table td{color:#e4f3ff!important}
 main .tabs{background:#071c37!important}
 main .tab.active{background:linear-gradient(135deg,#2078ff,#00b5e9)!important;color:white!important}
 @media(max-width:680px){.release-label{font-size:9px;letter-spacing:.5px}.hero-nav-item{min-height:70px}}
+
+.template-download{display:inline-flex;align-items:center;gap:7px;width:max-content;max-width:100%;margin:9px 0 3px;padding:8px 12px;border:1px solid #37c5e9;border-radius:9px;background:linear-gradient(135deg,#086a93,#114f88);color:#fff!important;text-decoration:none;font-size:12px;font-weight:750;box-shadow:0 5px 16px #00aee82b;transition:transform .2s,box-shadow .2s,background .2s}
+.template-download:hover,.template-download:focus-visible{transform:translateY(-2px);background:linear-gradient(135deg,#0c89a9,#136bb0);box-shadow:0 8px 23px #00bff24a;outline:2px solid #6be5ff;outline-offset:2px}
+.template-download span{font-size:17px;line-height:1}
 </style></head><body>
 <header class="hero"><div class="hero-inner"><div class="hero-brand"><div class="brand-emblem" aria-label="Logo Bảo hiểm xã hội Việt Nam"><img src="logo-bhxh.png" alt="Logo Bảo hiểm xã hội Việt Nam" width="56" height="56"></div><div><span class="brand-eyebrow">BẢO HIỂM XÃ HỘI · BÁO CÁO PHÂN TÍCH</span><span class="brand-sub">Công cụ tổng hợp dữ liệu &amp; đánh giá chỉ tiêu</span></div></div><div class="hero-main"><h1>TỔNG HỢP, ĐÁNH GIÁ CHỈ TIÊU<br><span>BHYT &amp; BHXH TỰ NGUYỆN</span></h1><p>Đánh giá tổng quan · Chi tiết nhân viên · Tăng giảm đối tượng · Biểu đồ trực quan</p></div><div class="hero-decoration" aria-hidden="true"></div><div class="hero-nav" aria-label="Các mục báo cáo">
 <div class="hero-nav-item" role="button" tabindex="0"><span class="hero-nav-icon icon-a">▥</span><span><b>Phần 1</b><small>Đánh giá tổng quan</small></span></div>
@@ -106,7 +110,7 @@ main .tab.active{background:linear-gradient(135deg,#2078ff,#00b5e9)!important;co
 <div class="hero-nav-item" role="button" tabindex="0"><span class="hero-nav-icon icon-d">▥</span><span><b>Phần 4</b><small>Biểu đồ trực quan</small></span></div>
 </div></div></header><main>
 <section class="card upload-card" id="uploadCard"><div class="upload-topline"><div><span class="section-eyebrow">BƯỚC 01 · DỮ LIỆU ĐẦU VÀO</span><h2>Nhập 6 file dữ liệu</h2></div><span class="step-chip">Xử lý trên thiết bị của bạn</span></div><div id="uploadContent"><p class="muted">Chọn file BHYT, danh sách BHXH tự nguyện tháng 9 và tháng 10, cùng file nhân viên thu và kế hoạch. File chỉ được xử lý trong trình duyệt, không tải lên máy chủ.</p><div class="uploadgrid">
-<div class="upload"><label for="plan">1. DS nhân viên thu.xlsx</label><input type="file" id="plan" accept=".xls,.xlsx,.csv"><small>Gồm: Tên TCHTPTĐT, Họ tên nhân viên thu, Mã nhân viên thu, Mã đơn vị tương ứng (BHXH và BHYT), Kế hoạch giao (BHXH và BHYT)</small></div>
+<div class="upload"><label for="plan">1. DS nhân viên thu.xlsx</label><input type="file" id="plan" accept=".xls,.xlsx,.csv"><a class="template-download" href="DS_nhan_vien_thu_MAU.xlsx" download="DS_nhan_vien_thu_MAU.xlsx" title="Tải file Excel mẫu để nhập đúng cấu trúc"><span aria-hidden="true">↓</span> Tải file mẫu Excel</a><small>Gồm: Tên TCHTPTĐT, Họ tên nhân viên thu, Mã nhân viên thu, Mã đơn vị tương ứng (BHXH và BHYT), Số chỉ tiêu giao (BHXH và BHYT)</small></div>
 <div class="upload"><label for="bhyt">2. C12_CHI_TIEU – Tháng BC</label><input type="file" id="bhyt" accept=".xls,.xlsx,.csv"><small>File C12 chỉ tiêu</small></div>
 
 <div class="upload"><label for="bhytPrev">3. C12_CHI_TIEU – Tháng trước</label><input type="file" id="bhytPrev" accept=".xls,.xlsx,.csv"><small>File C12 chỉ tiêu</small></div>
@@ -142,23 +146,41 @@ async function readFile(id){let f=$(id).files[0];if(!f)throw Error('Chưa chọn
 function rowsOf(wb,sheet=0){if(!wb.SheetNames[sheet])throw Error('Thiếu sheet thứ '+(sheet+1)+' trong file '+(wb.SheetNames[0]||''));return XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[sheet]],{header:1,defval:'',raw:true,blankrows:false})}
 function parseData(wb,kind){const rows=rowsOf(wb);const h=headerSearch(rows,[kind==='bhyt'?['tendvi','Tên đơn vị']:['Tên đơn vị','tendvi'],kind==='bhyt'?['sldBhytCk']:['Số lao động'],kind==='bhyt'?['madvi','Mã đơn vị']:['Mã đơn vị','madvi']]);const name=headerIndex(h.h,kind==='bhyt'?['tendvi','Tên đơn vị']:['Tên đơn vị','tendvi']);const val=headerIndex(h.h,kind==='bhyt'?['sldBhytCk']:['Số lao động']);const code=headerIndex(h.h,kind==='bhyt'?['madvi','Mã đơn vị']:['Mã đơn vị','madvi']);return rows.slice(h.r+1).map(row=>({name:String(row[name]??'').trim(),code:String(row[code]??'').trim(),value:num(row[val])})).filter(r=>r.name||r.code)}
 function parsePlan(wb){
- const s1=rowsOf(wb,0),h1=headerSearch(s1,[['Tên đơn vị'],['BHXH tự nguyện'],['BHYT']]);const nc=headerIndex(h1.h,['Tên đơn vị']),tc=headerIndex(h1.h,['BHXH tự nguyện']),bc=headerIndex(h1.h,['BHYT']);
+ const s1=rowsOf(wb,0),h1=headerSearch(s1,[['Tên đơn vị'],['Chỉ tiêu BHXH tự nguyện','BHXH tự nguyện'],['Chỉ tiêu BHYT','BHYT']]);
+ const nc=headerIndex(h1.h,['Tên đơn vị']),tc=headerIndex(h1.h,['Chỉ tiêu BHXH tự nguyện','BHXH tự nguyện']),bc=headerIndex(h1.h,['Chỉ tiêu BHYT','BHYT']);
  const planRows=s1.slice(h1.r+1).map(row=>({name:String(row[nc]??'').trim(),tn:num(row[tc]),bhyt:num(row[bc])})).filter(r=>r.name&&!['tong','tongcong'].includes(norm(r.name)));
- const orgPlans=ORGS.map((o,i)=>{const found=planRows.find(r=>norm(r.name)===norm(o.plan)||orgOf(r.name)===o.name);return found||planRows[i]||{name:o.name,tn:0,bhyt:0}});
- const s2=rowsOf(wb,1), h2=headerSearch(s2,[['Họ và tên'],['Mã đơn vị'],['Kế hoạch']]);
- // Dòng 1 chứa tiêu đề nhóm, dòng 2 chứa tên chỉ tiêu; tọa độ theo file DS nhân viên thu mẫu.
+ const orgPlans=ORGS.map((o,i)=>{const found=planRows.find(r=>norm(r.name)===norm(o.plan)||orgOf(r.name)===o.name);return found||{name:o.name,tn:0,bhyt:0}});
+ const s2=rowsOf(wb,1);
+ const h2=headerSearch(s2,[['Tên tổ chức'],['Họ và tên'],['Mã nhân viên thu'],['Mã đơn vị'],['Số chỉ tiêu giao','Kế hoạch']]);
  const hTop=h2.h.map(x=>String(x??'')),hSub=(s2[h2.r+1]||[]).map(x=>String(x??''));
- const employee=headerIndex(hTop,['Họ và tên']), employeeIdCol=headerIndex(hTop,['Mã nhân viên thu']), org=headerIndex(hTop,['Tên tổ chức']), codeGroup=headerIndex(hTop,['Mã đơn vị']), planGroup=headerIndex(hTop,['Kế hoạch']);
- if(employee<0||org<0||codeGroup<0||planGroup<0)throw Error('Sheet2 thiếu các nhóm cột Họ và tên / Tên tổ chức / Mã đơn vị / Kế hoạch.');
- const tnCode=codeGroup, bhytCode=codeGroup+1,tnPlan=planGroup,bhytPlan=planGroup+1;
- const check=(idx,text)=>{if(idx>=Math.max(hTop.length,hSub.length)+1)throw Error('Sheet2 thiếu cột '+text)};[tnCode,bhytCode,tnPlan,bhytPlan].forEach((x,i)=>check(x,['mã BHXHTN','mã BHYT','kế hoạch BHXHTN','kế hoạch BHYT'][i]));
+ // File mẫu: A=TT, B=Tên tổ chức, C=Họ và tên, D=Mã nhân viên thu,
+ // E/F=Mã đơn vị BHXH tự nguyện/BHYT, G/H=Số chỉ tiêu giao BHXH tự nguyện/BHYT.
+ // Không dùng tọa độ cố định: nhận diện theo tiêu đề nhóm và tiêu đề con.
+ const employee=headerIndex(hTop,['Họ và tên']),employeeIdCol=headerIndex(hTop,['Mã nhân viên thu']),org=headerIndex(hTop,['Tên tổ chức']);
+ const codeGroup=headerIndex(hTop,['Mã đơn vị']),planGroup=headerIndex(hTop,['Số chỉ tiêu giao','Kế hoạch']);
+ if([employee,employeeIdCol,org,codeGroup,planGroup].some(i=>i<0))throw Error('Sheet2 thiếu cột bắt buộc: Tên tổ chức, Họ và tên, Mã nhân viên thu, Mã đơn vị hoặc Số chỉ tiêu giao.');
+ const findSub=(groupStart,groupEnd,patterns,fallback)=>{
+  for(let i=groupStart;i<groupEnd;i++)if(patterns.some(p=>norm(hSub[i]||'').includes(norm(p))))return i;
+  return fallback;
+ };
+ const tnCode=findSub(codeGroup,planGroup,['BHXH tự nguyện'],codeGroup);
+ const bhytCode=findSub(codeGroup,planGroup,['BHYT'],codeGroup+1);
+ const tnPlan=findSub(planGroup,Math.max(hTop.length,hSub.length,planGroup+2),['BHXH tự nguyện'],planGroup);
+ const bhytPlan=findSub(planGroup,Math.max(hTop.length,hSub.length,planGroup+2),['BHYT'],planGroup+1);
+ if(new Set([tnCode,bhytCode,tnPlan,bhytPlan]).size!==4||tnCode===bhytCode||tnPlan===bhytPlan)
+  throw Error('Sheet2 không nhận diện được 4 cột mã đơn vị/chỉ tiêu BHXH tự nguyện và BHYT.');
  const employees=[];let group=null,lastTn='',lastBhyt='';
  for(let i=h2.r+2;i<s2.length;i++){
   const row=s2[i]||[],name=String(row[employee]??'').trim(),orgText=String(row[org]??'').trim();
-  if(orgText){const newGroup=orgOf(orgText);if(newGroup&&newGroup!==group){group=newGroup;lastTn='';lastBhyt=''}if(!name)continue}
+  if(orgText){
+   const newGroup=orgOf(orgText);
+   if(newGroup&&newGroup!==group){group=newGroup;lastTn='';lastBhyt=''}
+   if(!name)continue;
+  }
   if(!name||!group)continue;
   const explicitTn=String(row[tnCode]??'').trim(),explicitBhyt=String(row[bhytCode]??'').trim();
-  if(explicitTn)lastTn=explicitTn;if(explicitBhyt)lastBhyt=explicitBhyt;
+  if(explicitTn)lastTn=explicitTn;
+  if(explicitBhyt)lastBhyt=explicitBhyt;
   employees.push({org:group,name,employeeId:String(row[employeeIdCol]??'').trim().replace(/['’]/g,''),tnCode:lastTn,bhytCode:lastBhyt,tnPlan:num(row[tnPlan]),bhytPlan:num(row[bhytPlan]),row:i+1,explicitTn,explicitBhyt});
  }
  // Mã nhân viên thu là khóa định danh. Không gộp theo họ tên vì có người trùng tên.
