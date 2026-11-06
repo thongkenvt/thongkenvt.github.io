@@ -169,7 +169,7 @@ function parsePlan(wb){
  const bhytPlan=findSub(planGroup,Math.max(hTop.length,hSub.length,planGroup+2),['BHYT'],planGroup+1);
  if(new Set([tnCode,bhytCode,tnPlan,bhytPlan]).size!==4||tnCode===bhytCode||tnPlan===bhytPlan)
   throw Error('Sheet2 không nhận diện được 4 cột mã đơn vị/chỉ tiêu BHXH tự nguyện và BHYT.');
- const employees=[];let group=null,lastTn='',lastBhyt='';
+ const employees=[],orgNames=[];let group=null,lastTn='',lastBhyt='';
  for(let i=h2.r+2;i<s2.length;i++){
   const row=s2[i]||[],name=String(row[employee]??'').trim(),orgText=String(row[org]??'').trim();
   if(orgText){
