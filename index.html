@@ -178,27 +178,26 @@ function parsePlan(wb){
     const existing=orgNames.find(x=>norm(x)===n);
     const newGroup=existing||orgText;
     if(!existing && name)orgNames.push(newGroup);
-    if(newGroup!==group){group=newGroup;lastTn='';lastBhyt='';previousEmployeeId=''}
+    if(newGroup!==group){group=newGroup;lastTn='';lastBhyt=''}
    }
    if(!name)continue;
   }
   if(!name||!group)continue;
   if(!orgNames.some(x=>norm(x)===norm(group)))orgNames.push(group);
   const employeeId=String(row[employeeIdCol]??'').trim().replace(/['’]/g,'');
-  const sameEmployee=Boolean(employeeId)&&employeeId===previousEmployeeId;
   const explicitTn=String(row[tnCode]??'').trim(),explicitBhyt=String(row[bhytCode]??'').trim();
-  lastTn=explicitTn||(sameEmployee?lastTn:'');
-  lastBhyt=explicitBhyt||(sameEmployee?lastBhyt:'');
-  previousEmployeeId=employeeId;
+  lastTn=explicitTn||lastTn;
+  lastBhyt=explicitBhyt||lastBhyt;
   employees.push({org:group,name,employeeId,tnCode:lastTn,bhytCode:lastBhyt,tnPlan:num(row[tnPlan]),bhytPlan:num(row[bhytPlan]),row:i+1,explicitTn,explicitBhyt});
  }
  // Tổ chức lấy từ Sheet2, chỉ tiêu tổ chức lấy từ Sheet1. Không gán mặc định mã hay tên nào.
  ORGS=orgNames.map(name=>({name}));
- const orgPlans=ORGS.map(o=>{
+ const orgPlans=ORGS.map((o,i)=>{
   const match=planRows.find(r=>norm(r.name)===norm(o.name))||
               planRows.find(r=>orgKey(r.name)===orgKey(o.name))||
               planRows.find(r=>{const a=orgKey(r.name),b=orgKey(o.name);return a.length>=5&&b.length>=5&&(a.includes(b)||b.includes(a))});
-  return {name:o.name,tn:match?.tn||0,bhyt:match?.bhyt||0};
+  const selected=match||planRows[i];
+  return {name:o.name,tn:selected?.tn||0,bhyt:selected?.bhyt||0};
  });
  // Mã nhân viên thu là khóa định danh. Không gộp theo họ tên vì có người trùng tên.
  const grouped=new Map();
