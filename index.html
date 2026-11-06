@@ -115,7 +115,7 @@ main .tab.active{background:linear-gradient(135deg,#2078ff,#00b5e9)!important;co
 <div class="upload"><label for="d05">5. DSBHXHTUNGUYEN – Tháng BC</label><input type="file" id="d05" accept=".xls,.xlsx,.csv"><small>Danh sách tham gia bảo hiểm xã hội tự nguyện</small></div><div class="upload"><label for="tnListPrev">6. DSBHXHTUNGUYEN – Tháng trước</label><input type="file" id="tnListPrev" accept=".xls,.xlsx,.csv"><small>Danh sách tham gia bảo hiểm xã hội tự nguyện</small></div></div>
 <div class="hint"><b>Quy tắc phân bổ:</b> Nếu nhiều nhân viên dùng cùng một mã đơn vị trong Sheet2, số thực hiện của mã đó được <b>chia đều theo số nguyên</b>; phần dư phân cho nhân viên theo thứ tự từ trên xuống dưới. Ô mã đơn vị trống trong nhóm tổ chức được hiểu là tiếp tục sử dụng mã ở dòng nhân viên gần nhất phía trên. Nếu mã trống ngay đầu nhóm thì nhân viên đó chưa có mã để đối chiếu.</div>
 <div class="actions"><button id="run">Tạo báo cáo</button><button id="reset" class="secondary">Xóa file đã chọn</button></div><div id="message" role="status"></div></div></section>
-<section class="card result-card" id="result" hidden><div class="result-heading"><div><span class="section-eyebrow">BƯỚC 02 · KẾT QUẢ PHÂN TÍCH</span><h2>Kết quả đánh giá</h2></div><button id="toggleUpload" class="secondary compact" type="button" aria-expanded="false">Hiện khu vực nhập file</button></div><div class="tabs" role="tablist" aria-label="Các phần báo cáo"><button class="tab active" data-target="overview">Phần 1 · Đánh giá tổng quan</button><button class="tab" data-target="detail">Phần 2 · Đánh giá chi tiết</button><button class="tab" data-target="changes">Phần 3 · Đánh giá tăng giảm</button><button class="tab" data-target="charts">Phần 4 · Biểu đồ trực quan</button></div><div id="overview" class="panel active"></div><div id="detail" class="panel"><div id="detailTables"></div></div><div id="changes" class="panel"><div id="changeTables"></div></div><div id="charts" class="panel"><div class="chart-intro">Biểu đồ xếp hạng nhân viên theo tỷ lệ hoàn thành kế hoạch, từ cao xuống thấp. Mỗi tổ chức có hai biểu đồ độc lập: BHXH tự nguyện và BHYT. Nhân viên chưa có chỉ tiêu được liệt kê riêng.</div><div id="chartTables"></div></div><div class="actions"><button id="export">Xuất báo cáo Excel (6 sheet)</button></div></section>
+<section class="card result-card" id="result" hidden><div class="result-heading"><div><span class="section-eyebrow">BƯỚC 02 · KẾT QUẢ PHÂN TÍCH</span><h2>Kết quả đánh giá</h2></div><button id="toggleUpload" class="secondary compact" type="button" aria-expanded="false">Hiện khu vực nhập file</button></div><div class="tabs" role="tablist" aria-label="Các phần báo cáo"><button class="tab active" data-target="overview">Phần 1 · Đánh giá tổng quan</button><button class="tab" data-target="detail">Phần 2 · Đánh giá chi tiết</button><button class="tab" data-target="changes">Phần 3 · Đánh giá tăng giảm</button><button class="tab" data-target="charts">Phần 4 · Biểu đồ trực quan</button></div><div id="overview" class="panel active"></div><div id="detail" class="panel"><div id="detailTables"></div></div><div id="changes" class="panel"><div id="changeTables"></div></div><div id="charts" class="panel"><div class="chart-intro">Biểu đồ xếp hạng nhân viên theo tỷ lệ hoàn thành kế hoạch, từ cao xuống thấp. Mỗi tổ chức có hai biểu đồ độc lập: BHXH tự nguyện và BHYT. Nhân viên chưa có chỉ tiêu được liệt kê riêng.</div><div id="chartTables"></div></div><div class="actions"><button id="export">Xuất báo cáo Excel (8 sheet, gồm đối soát phân bổ)</button></div></section>
 </main><footer class="site-footer"><div class="footer-inner"><span>Hồ Anh Vũ - Bảo hiểm xã hội cơ sở Điện Bàn, Đà Nẵng</span></div></footer>
 <script>
 'use strict';
@@ -166,10 +166,10 @@ function parsePlan(wb){
  for(const e of employees){
   const key=e.org+'|'+(e.employeeId?norm(e.employeeId):'ROW'+e.row);
   const existed=grouped.has(key);
-  if(!existed)grouped.set(key,{...e,tnCodes:new Set(),bhytCodes:new Set()});
+  if(!existed)grouped.set(key,{...e,tnCodes:new Set(),bhytCodes:new Set(),tnCodeRows:new Map(),bhytCodeRows:new Map()});
   const g=grouped.get(key);
-  for(const c of String(e.tnCode||'').split(/[;,，；\n\r]+/).map(x=>x.trim()).filter(Boolean))g.tnCodes.add(c);
-  for(const c of String(e.bhytCode||'').split(/[;,，；\n\r]+/).map(x=>x.trim()).filter(Boolean))g.bhytCodes.add(c);
+  for(const c of String(e.tnCode||'').split(/[;,，；\n\r]+/).map(x=>x.trim()).filter(Boolean)){g.tnCodes.add(c);const k=norm(c);if(!g.tnCodeRows.has(k))g.tnCodeRows.set(k,e.row)}
+  for(const c of String(e.bhytCode||'').split(/[;,，；\n\r]+/).map(x=>x.trim()).filter(Boolean)){g.bhytCodes.add(c);const k=norm(c);if(!g.bhytCodeRows.has(k))g.bhytCodeRows.set(k,e.row)}
   if(existed){g.tnPlan+=e.tnPlan;g.bhytPlan+=e.bhytPlan}
  }
  const uniqueEmployees=[...grouped.values()].map(e=>({...e,tnCodes:[...e.tnCodes],bhytCodes:[...e.bhytCodes]}));
@@ -179,12 +179,46 @@ function sumOrg(data,org){return data.reduce((s,r)=>s+(orgOf(r.name)===org?r.val
 function codeMap(data){const m=new Map();for(const r of data){const key=norm(r.code);if(key)m.set(key,(m.get(key)||0)+r.value)}return m}
 // Chia nguyên theo thứ tự từ trên xuống: 11 cho 3 người => 4,4,3; số âm chia đối xứng.
 function distribute(total,count,index){if(!count)return 0;const sign=Math.sign(total),abs=Math.abs(Math.round(total)),base=Math.floor(abs/count),rem=abs%count;return sign*(base+(index<rem?1:0))}
+// Một mã đơn vị được phân bổ một lần cho các MÃ NV THU duy nhất, theo vị trí dòng đầu tiên trong Sheet2.
+// Một mã NV có nhiều mã đơn vị sẽ nhận tổng phần được chia của từng mã, không tạo dòng lặp.
+function allocationOwners(employees,kind){
+ const field=kind==='bhyt'?'bhytCodes':'tnCodes';
+ const rowField=kind==='bhyt'?'bhytCodeRows':'tnCodeRows';
+ const owners=new Map(),warnings=[];
+ employees.forEach((e,i)=>{
+  const seen=new Set();
+  for(const raw of e[field]||[]){
+   const code=norm(raw);if(!code||seen.has(code))continue;seen.add(code);
+   if(!owners.has(code))owners.set(code,[]);
+   owners.get(code).push({index:i,org:e.org,employeeId:e.employeeId,row:e[rowField]?.get(code)??e.row});
+  }
+ });
+ for(const [code,list] of owners){
+  list.sort((a,b)=>a.row-b.row||a.index-b.index);
+  const orgs=new Set(list.map(x=>x.org));
+  if(orgs.size>1)warnings.push(`Mã đơn vị ${code} thuộc nhiều tổ chức: ${[...orgs].join(', ')}`);
+ }
+ return {owners,warnings};
+}
+function allocateByCode(employees,kind,codeValues,fields){
+ const {owners,warnings}=allocationOwners(employees,kind);
+ const rows=employees.map(e=>({org:e.org,name:e.name,employeeId:e.employeeId,code:(e[kind==='bhyt'?'bhytCodes':'tnCodes']||[]).join(', '),row:e.row,...Object.fromEntries(fields.map(f=>[f,0]))}));
+ const audit=[];
+ for(const [code,list] of owners){
+  const values=codeValues.get(code)||{};
+  list.forEach((owner,j)=>{
+   const r=rows[owner.index],given={};
+   for(const f of fields){const v=distribute(Number(values[f]||0),list.length,j);r[f]+=v;given[f]=v}
+   audit.push({code,org:owner.org,employeeId:owner.employeeId,name:r.name,order:j+1,owners:list.length,...given});
+  });
+ }
+ return {rows,audit,warnings,owners};
+}
 function makeDetail(employees,now,prev,kind){
- const key=kind==='bhyt'?'bhytCodes':'tnCodes',pk=kind==='bhyt'?'bhytPlan':'tnPlan',currentMap=codeMap(now),prevMap=codeMap(prev);
- const owners=new Map();employees.forEach((e,i)=>(e[key]||[]).forEach(raw=>{const c=norm(raw);if(!c)return;if(!owners.has(c))owners.set(c,[]);if(!owners.get(c).includes(i))owners.get(c).push(i)}));
- const result=employees.map(e=>({org:e.org,name:e.name,employeeId:e.employeeId,code:(e[key]||[]).join(', '),plan:e[pk],current:0,prev:0,row:e.row}));
- for(const [code,indices] of owners)indices.forEach((i,j)=>{result[i].current+=distribute(currentMap.get(code)||0,indices.length,j);result[i].prev+=distribute(prevMap.get(code)||0,indices.length,j)});
- return result;
+ const pk=kind==='bhyt'?'bhytPlan':'tnPlan',nowMap=codeMap(now),prevMap=codeMap(prev),codes=new Map();
+ for(const code of new Set([...nowMap.keys(),...prevMap.keys()]))codes.set(code,{current:nowMap.get(code)||0,prev:prevMap.get(code)||0});
+ const allocation=allocateByCode(employees,kind,codes,['current','prev']);
+ return allocation.rows.map((r,i)=>({...r,plan:employees[i][pk]}));
 }
 // Đối soát độc lập tổng theo tên tổ chức với tổng theo mã đơn vị của nhân viên.
 // Không gán phần chưa xác định cho một nhân viên bất kỳ.
@@ -347,13 +381,16 @@ function changeCodeMap(parsed){
  return {map,cancelled:offsetPairs,affectedPersons,duplicates:0};
 }
 function makeChanges(employees,parsed,kind){
- const field=kind==='bhyt'?'bhytCodes':'tnCodes',cm=changeCodeMap(parsed);
- const owners=new Map();
- employees.forEach((e,i)=>{for(const raw of e[field]||[]){const code=norm(raw);if(!code)continue;if(!owners.has(code))owners.set(code,[]);if(!owners.get(code).includes(i))owners.get(code).push(i)}});
- const rows=employees.map(e=>({org:e.org,name:e.name,employeeId:e.employeeId,code:(e[field]||[]).join(', '),inc:0,dec:0,diff:0}));
- for(const [code,indices] of owners){const x=cm.map.get(code)||{inc:0,dec:0};indices.forEach((i,j)=>{rows[i].inc+=distribute(x.inc,indices.length,j);rows[i].dec+=distribute(x.dec,indices.length,j)})}
- rows.forEach(r=>r.diff=r.inc-r.dec);
- return {rows,cancelled:cm.cancelled,duplicates:cm.duplicates,matched:[...cm.map.keys()].filter(c=>owners.has(c)).length,source:parsed};
+ const cm=changeCodeMap(parsed);
+ const allocated=allocateByCode(employees,kind,cm.map,['inc','dec']);
+ const rows=allocated.rows.map(r=>({...r,diff:r.inc-r.dec}));
+ // Đối soát: tổng theo nhân viên phải bằng tổng theo từng mã đơn vị có người phụ trách.
+ for(const f of ['inc','dec']){
+  const expected=[...allocated.owners.keys()].reduce((v,c)=>v+(cm.map.get(c)?.[f]||0),0);
+  const actual=rows.reduce((v,r)=>v+r[f],0);
+  if(expected!==actual)throw Error(`Phần 3 ${kind}: phân bổ ${f} sai (${actual}/${expected}).`);
+ }
+ return {rows,cancelled:cm.cancelled,duplicates:cm.duplicates,matched:[...cm.map.keys()].filter(c=>allocated.owners.has(c)).length,source:parsed,audit:allocated.audit,warnings:allocated.warnings,unassigned:[...cm.map].filter(([c])=>!allocated.owners.has(c))};
 }
 function changeTable(title,rows){
  const head=['STT','Mã NV thu','Tên nhân viên','Tăng','Giảm','Chênh lệch'];
@@ -411,7 +448,10 @@ async function run(){
   const db=rb.rows;
   const pb=parseChanges(books[3],'bhyt');
   const cb=makeChanges(p.employees,pb,'bhyt'),ct=makeChanges(p.employees,pt,'tn');
-  const warnings=[...rb.notices,...totals.warnings];
+  const warnings=[...rb.notices,...totals.warnings,...cb.warnings.map(x=>'BHYT: '+x),...ct.warnings.map(x=>'BHXHTN: '+x)];
+  for(const [kind,changes] of [['BHYT',cb],['BHXH tự nguyện',ct]]){
+   if(changes.unassigned.length)warnings.push(`${kind}: ${changes.unassigned.length} mã đơn vị có phát sinh nhưng chưa được gán nhân viên trong Sheet2. Ví dụ: ${changes.unassigned.slice(0,5).map(x=>x[0]).join(', ')}`);
+  }
   for(const e of p.employees){if(!(e.bhytCodes||[]).length)warnings.push(`Dòng ${e.row}: ${e.name} chưa có mã BHYT.`);if(!(e.tnCodes||[]).length)warnings.push(`Dòng ${e.row}: ${e.name} chưa có mã BHXH tự nguyện.`)}
   if(p.originalCount>p.employees.length)warnings.push('Đã gộp '+(p.originalCount-p.employees.length)+' dòng trùng mã nhân viên thu, cộng dồn các mã đơn vị.');
   if(pb.identified===0)warnings.push('D03ATS không có dòng ghi chú ON, TM hoặc GH được nhận diện.');
@@ -429,7 +469,7 @@ async function run(){
  }catch(e){console.error(e);$('message').className='error';$('message').textContent='Không thể tạo báo cáo: '+e.message}finally{btn.disabled=false}
 }
 $('toggleUpload').addEventListener('click',()=>{const card=$('uploadCard');const collapsed=card.classList.toggle('collapsed');$('toggleUpload').setAttribute('aria-expanded',String(!collapsed));$('toggleUpload').textContent=collapsed?'Hiện khu vực nhập file':'Ẩn khu vực nhập file';if(!collapsed)card.scrollIntoView({behavior:'smooth',block:'start'});});$('run').addEventListener('click',run);$('reset').addEventListener('click',()=>{['plan','bhyt','bhytPrev','d03','d05','tnListPrev'].forEach(id=>$(id).value='');$('result').hidden=true;$('uploadCard').classList.remove('collapsed');state=null;$('message').textContent='Đã xóa các file đã chọn.'});document.querySelectorAll('.tab').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x===btn));document.querySelectorAll('.panel').forEach(x=>x.classList.toggle('active',x.id===btn.dataset.target))}));
-function exportRows(kind,rows){if(kind==='overview')return [['STT','Tên TCHTPTĐT','Số thực hiện','Số kế hoạch','Tỷ lệ %','Tăng/Giảm tháng trước'],...rows.map((r,i)=>[i+1,r.org,r.current,r.plan,pct(r.current,r.plan),r.current-r.prev]),['','TỔNG CỘNG',total(rows,'current'),total(rows,'plan'),pct(total(rows,'current'),total(rows,'plan')),total(rows,'current')-total(rows,'prev')]];return [['STT','Tên tổ chức','Tên nhân viên','Mã đơn vị','Số thực hiện','Số kế hoạch','Tỷ lệ %','Đánh giá','Tăng/Giảm tháng trước'],...rows.map((r,i)=>[i+1,r.org,r.name,r.code,r.current,r.plan,pct(r.current,r.plan),pct(r.current,r.plan)===null?'—':pct(r.current,r.plan)>=100?'HT':'KHT',r.current-r.prev])]}$('export').addEventListener('click',()=>{if(!state)return;const wb=XLSX.utils.book_new();[['Tong quan BHYT','overview',state.ob],['Tong quan BHXHTN','overview',state.ot],['Chi tiet BHYT','detail',state.db],['Chi tiet BHXHTN','detail',state.dt]].forEach(([name,type,rows])=>{const ws=XLSX.utils.aoa_to_sheet(exportRows(type,rows));ws['!cols']=[{wch:7},{wch:35},{wch:27},{wch:28},{wch:17},{wch:17},{wch:18},{wch:14},{wch:24}];XLSX.utils.book_append_sheet(wb,ws,name)});[['Tang giam BHYT',state.cb.rows],['Tang giam BHXHTN',state.ct.rows]].forEach(([name,rows])=>{const ws=XLSX.utils.aoa_to_sheet(exportChangeRows(rows));ws['!cols']=[{wch:7},{wch:38},{wch:28},{wch:28},{wch:12},{wch:12},{wch:16}];XLSX.utils.book_append_sheet(wb,ws,name)});XLSX.writeFile(wb,'Bao_cao_danh_gia_BHYT_BHXHTN.xlsx')});
+function exportRows(kind,rows){if(kind==='overview')return [['STT','Tên TCHTPTĐT','Số thực hiện','Số kế hoạch','Tỷ lệ %','Tăng/Giảm tháng trước'],...rows.map((r,i)=>[i+1,r.org,r.current,r.plan,pct(r.current,r.plan),r.current-r.prev]),['','TỔNG CỘNG',total(rows,'current'),total(rows,'plan'),pct(total(rows,'current'),total(rows,'plan')),total(rows,'current')-total(rows,'prev')]];return [['STT','Tên tổ chức','Tên nhân viên','Mã đơn vị','Số thực hiện','Số kế hoạch','Tỷ lệ %','Đánh giá','Tăng/Giảm tháng trước'],...rows.map((r,i)=>[i+1,r.org,r.name,r.code,r.current,r.plan,pct(r.current,r.plan),pct(r.current,r.plan)===null?'—':pct(r.current,r.plan)>=100?'HT':'KHT',r.current-r.prev])]}$('export').addEventListener('click',()=>{if(!state)return;const wb=XLSX.utils.book_new();[['Tong quan BHYT','overview',state.ob],['Tong quan BHXHTN','overview',state.ot],['Chi tiet BHYT','detail',state.db],['Chi tiet BHXHTN','detail',state.dt]].forEach(([name,type,rows])=>{const ws=XLSX.utils.aoa_to_sheet(exportRows(type,rows));ws['!cols']=[{wch:7},{wch:35},{wch:27},{wch:28},{wch:17},{wch:17},{wch:18},{wch:14},{wch:24}];XLSX.utils.book_append_sheet(wb,ws,name)});[['Tang giam BHYT',state.cb.rows],['Tang giam BHXHTN',state.ct.rows]].forEach(([name,rows])=>{const ws=XLSX.utils.aoa_to_sheet(exportChangeRows(rows));ws['!cols']=[{wch:7},{wch:38},{wch:28},{wch:28},{wch:12},{wch:12},{wch:16}];XLSX.utils.book_append_sheet(wb,ws,name)});[['Phan bo BHYT',state.cb.audit],['Phan bo BHXHTN',state.ct.audit]].forEach(([name,audit])=>{const headers=['Mã đơn vị','Tổ chức','Mã NV thu','Tên nhân viên','Thứ tự phân bổ','Số nhân viên chung mã','Tăng','Giảm'];const rows=[headers,...audit.map(r=>[r.code,r.org,r.employeeId,r.name,r.order,r.owners,r.inc,r.dec])];const ws=XLSX.utils.aoa_to_sheet(rows);ws['!cols']=[{wch:29},{wch:36},{wch:20},{wch:30},{wch:18},{wch:22},{wch:12},{wch:12}];XLSX.utils.book_append_sheet(wb,ws,name)});XLSX.writeFile(wb,'Bao_cao_danh_gia_BHYT_BHXHTN.xlsx')});
 </script><script>
 (function(){
 const cards=Array.from(document.querySelectorAll('.hero-nav-item'));
